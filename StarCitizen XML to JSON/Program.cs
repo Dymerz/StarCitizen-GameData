@@ -9,6 +9,7 @@ namespace StarCitizen_XML_to_JSON
     {
         static void Main(string[] args)
         {
+			bool hasException = false;
             if (args.Length < 1 || args.Contains("-h") || args.Contains("--help"))
             {
                 Console.WriteLine("Usage: sc_xml_json.exe [source] <destination> [-s|-w|-S]");
@@ -53,17 +54,25 @@ namespace StarCitizen_XML_to_JSON
 			foreach (var f in files)
 			{
 				Console.Write($"[+] Converting {f.Name}..");
-				//try
-				//{
+				try
+				{
 					cryXml.ConvertJSON(f, filters);
 					Console.WriteLine($"\r[+] Converting {f.Name} Done");
-				//}
-				//catch (Exception ex)
-				//{
-					//Console.WriteLine($"\r[-] Converting {f.Name} ERROR");
-					//Console.WriteLine($"[!] {ex.Message}");
-					//throw ex;
-				//}
+				}
+					catch (Exception ex)
+				{
+					Console.WriteLine($"\r[-] Converting {f.Name} ERROR");
+					hasException = true;
+				}
+		}
+
+			if (hasException)
+			{
+				Console.WriteLine("=====================================");
+				Console.WriteLine("[!] Something went wrong!");
+				Console.WriteLine($"[!] More details can be found in: '{Environment.CurrentDirectory + "/crashlog.txt"}'");
+				Console.WriteLine("=====================================");
+				Console.WriteLine();
 			}
 		}
 
