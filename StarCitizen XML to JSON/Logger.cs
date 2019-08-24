@@ -8,6 +8,7 @@ namespace StarCitizen_XML_to_JSON
 	{
 		private static StringBuilder sb = new StringBuilder();
 		private static string date_format = "yyy-MM-dd HH:mm:ss.fff";
+		public static string filename = DateTime.Now.ToString("dd-MM-yyyy") + "_log.txt";
 
 		/// <summary>
 		/// Print DEFAULT log
@@ -37,11 +38,17 @@ namespace StarCitizen_XML_to_JSON
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="end"></param>
-		public static void LogError(string message, string end = "\n", string start = "")
+		public static void LogError(string message, Exception exception = null, string end = "\n", string start = "")
 		{
 			string line = $"{start}[-] {message}{end}";
 			Console.Write(line);
 			sb.Append(DateTime.Now.ToString($"[{date_format}] ") + $"[-] {message}\n");
+
+			if (exception != null)
+			{
+				sb.Append(exception.StackTrace + "\n");
+				sb.Append(exception.Message + "\n");
+			}
 		}
 
 		/// <summary>
@@ -87,8 +94,6 @@ namespace StarCitizen_XML_to_JSON
 		/// </summary>
 		public static void WriteLog()
 		{
-			string filename = DateTime.Now.ToString("dd-MM-yyyy") + "_log.txt";
-
 			// write the logs to the file
 			using (StreamWriter writer = new StreamWriter(filename, false, Encoding.UTF8))
 			{
