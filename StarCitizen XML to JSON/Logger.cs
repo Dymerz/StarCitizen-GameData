@@ -90,7 +90,7 @@ namespace StarCitizen_XML_to_JSON
 			string filename = DateTime.Now.ToString("dd-MM-yyyy") + "_log.txt";
 
 			// write the logs to the file
-			using (StreamWriter writer = new StreamWriter(filename, true, Encoding.UTF8))
+			using (StreamWriter writer = new StreamWriter(filename, false, Encoding.UTF8))
 			{
 				writer.Write(sb.ToString());
 			}
