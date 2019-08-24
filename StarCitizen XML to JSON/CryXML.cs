@@ -7,6 +7,9 @@ using StarCitizen_XML_to_JSON.JsonObjects.Ship;
 
 namespace StarCitizen_XML_to_JSON
 {
+	/// <summary>
+	/// Convert all types of XML
+	/// </summary>
 	public class CryXML
 	{
 		public string source{ get; private set;  } = null;
@@ -27,8 +30,6 @@ namespace StarCitizen_XML_to_JSON
 		public void ConvertJSON(FileInfo file, SCType filter = SCType.Every)
 		{
 			// Get the relative and absolute file path
-			//string relative_dest = new Uri(source + "\\").MakeRelativeUri(new Uri(file.FullName)).ToString();
-			//string absolute_dest = Uri.UnescapeDataString(Path.Combine(destination, relative_dest));
 
 			// Load the XML
 			XmlDocument doc = new XmlDocument();
@@ -53,10 +54,6 @@ namespace StarCitizen_XML_to_JSON
 				default:
 					throw new Exception($"Unknow CSType: '{file.FullName}', cannot determine the SCType");
 			}
-
-			// Create direcotries
-			//Directory.CreateDirectory(new FileInfo(absolute_dest).Directory.FullName);
-
 			// Start processing
 			jObject?.Process();
 		}
