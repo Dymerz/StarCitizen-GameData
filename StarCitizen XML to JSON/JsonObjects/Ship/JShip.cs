@@ -9,14 +9,12 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Ship
 {
 	internal class JShip : JObject
 	{
-		public new string directory_name = "Ship";
+		public new string directory_name = "Ships";
 
 		public JShip(XmlDocument doc, FileInfo file, string destination) : base(doc, file, destination)
 		{
 			if (!Directory.Exists(Path.Combine(destination, directory_name)))
 				Directory.CreateDirectory(Path.Combine(destination, directory_name));
-
-			//this.filename = Path.Combine(destination, directory_name, file.Name.Replace(file.Extension, null) + ".json");
 		}
 
 		public override void Process()
@@ -77,7 +75,7 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Ship
 				writer.WriteEndObject();
 			}
 
-			using (StreamWriter writer = new StreamWriter(Path.Combine(base.destination, directory_name, name + ".json")))
+			using (StreamWriter writer = new StreamWriter(Path.Combine(base.destination, directory_name, name.Replace(" ", "_") + ".json")))
 			{
 				writer.Write(sb.ToString());
 			}
