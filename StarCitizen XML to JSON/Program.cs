@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -9,23 +8,25 @@ namespace StarCitizen_XML_to_JSON
     {
         static void Main(string[] args)
         {
+			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 			bool hasException = false;
+
             if (args.Length < 1 || args.Contains("-h") || args.Contains("--help"))
             {
-                Console.WriteLine("Usage: sc_xml_json.exe [source] <destination> [-s|-w|-S]");
-                Console.WriteLine("Convert any StarCitizen XML files to JSON");
-                Console.WriteLine();
-                Console.WriteLine("[Required]");
-                Console.WriteLine("\tsource: \tthe folder to extract XML data.");
-                Console.WriteLine();
-                Console.WriteLine("[Optional]");
-                Console.WriteLine("\tdestination: \twrite all JSON in the destination, respecting source hierarchy.");
-				Console.WriteLine("\t\t\tdefault: current working directory.");
-				Console.WriteLine();
-				Console.WriteLine("[Filters]");
-				Console.WriteLine("\t--ships, -s\t: Convert Ships.");
-				Console.WriteLine("\t--weapons, -w\t: Convert Weapons.");
-				Console.WriteLine("\t--stations, -S\t: Convert Stations.");
+                Logger.LogEmpty("Usage: sc_xml_json.exe [source] <destination> [-s|-w|-S]");
+                Logger.LogEmpty("Convert any StarCitizen XML files to JSON");
+                Logger.LogEmpty();
+                Logger.LogEmpty("[Required]");
+                Logger.LogEmpty("\tsource: \tthe folder to extract XML data.");
+                Logger.LogEmpty();
+                Logger.LogEmpty("[Optional]");
+                Logger.LogEmpty("\tdestination: \twrite all JSON in the destination, respecting source hierarchy.");
+				Logger.LogEmpty("\t\t\tdefault: current working directory.");
+				Logger.LogEmpty();
+				Logger.LogEmpty("[Filters]");
+				Logger.LogEmpty("\t--ships, -s\t: Convert Ships.");
+				Logger.LogEmpty("\t--weapons, -w\t: Convert Weapons.");
+				Logger.LogEmpty("\t--stations, -S\t: Convert Stations.");
                 return;
             }
 
@@ -35,45 +36,48 @@ namespace StarCitizen_XML_to_JSON
             string destination = new DirectoryInfo((args.Length >= 2) ? args[1] : ".").FullName;
 			SCType filters = FindParameters(args);
 
-			Console.WriteLine("Parameters:");
-			Console.WriteLine($"\tSource:\t\t{source}");
-			Console.WriteLine($"\tDestination:\t{destination}");
-			Console.WriteLine($"Filter:");
-			Console.WriteLine("\tShips: " + ((filters & SCType.Ship) == SCType.None ? "No" : "Yes"));
-			Console.WriteLine("\tWeapons: " + ((filters & SCType.Weapon) == SCType.None ? "No" : "Yes"));
-			Console.WriteLine("\tStations: " + ((filters & SCType.None) == SCType.None ? "No" : "Yes"));
-			Console.WriteLine();
+			Logger.LogInfo("Process has started.");
+			Logger.LogInfo("Parameters:");
+			Logger.LogEmpty($"\tSource:\t\t{source}");
+			Logger.LogEmpty($"\tDestination:\t{destination}");
+			Logger.LogInfo($"Filter:");
+			Logger.LogEmpty("\tShips: " + ((filters & SCType.Ship) == SCType.None ? "No" : "Yes"));
+			Logger.LogEmpty("\tWeapons: " + ((filters & SCType.Weapon) == SCType.None ? "No" : "Yes"));
+			Logger.LogEmpty("\tStations: " + ((filters & SCType.None) == SCType.None ? "No" : "Yes"));
+			Logger.LogEmpty();
 
-			Console.WriteLine("[+] Loading directory..");
+			Logger.Log("Loading directory..");
 			var files = GetFiles(source, filters);
-			Console.WriteLine($"Files to be converted: {files.Length}");
-			Console.WriteLine();
+			Logger.LogInfo($"Files to be converted: {files.Length}");
+			Logger.LogEmpty();
 
-			Console.WriteLine("[+] Starting..");
+			Logger.Log("Starting..");
 			CryXML cryXml = new CryXML(source, destination);
 			foreach (var f in files)
 			{
-				Console.Write($"[+] Converting {f.Name}..");
+				Logger.Log($"Converting {f.Name}..", "");
 				try
 				{
 					cryXml.ConvertJSON(f, filters);
-					Console.WriteLine($"\r[+] Converting {f.Name} Done");
+					Logger.Log($"Converting {f.Name} Done", start: "\r");
 				}
 					catch (Exception ex)
 				{
-					Console.WriteLine($"\r[-] Converting {f.Name} ERROR");
+					Logger.LogError($"Converting {f.Name} ERROR", start: "\r");
 					hasException = true;
 				}
-		}
+				break;
+			}
 
 			if (hasException)
 			{
-				Console.WriteLine("=====================================");
-				Console.WriteLine("[!] Something went wrong!");
-				Console.WriteLine($"[!] More details can be found in: '{Environment.CurrentDirectory + "/crashlog.txt"}'");
-				Console.WriteLine("=====================================");
-				Console.WriteLine();
+				Logger.LogEmpty("=====================================");
+				Logger.LogError("Something went wrong!");
+				Logger.LogError($"More details can be found in: '{Environment.CurrentDirectory + "/crashlog.txt"}'");
+				Logger.LogEmpty("=====================================");
 			}
+
+			Logger.WriteLog();
 		}
 
 		/// <summary>
@@ -96,7 +100,6 @@ namespace StarCitizen_XML_to_JSON
 
 			foreach (string arg in args)
 			{
-				Console.WriteLine(arg);
 				switch (arg)
 				{
 					case "--ships":
