@@ -29,8 +29,6 @@ namespace StarCitizen_XML_to_JSON
 		/// <param name="filter">SCType: filter</param>
 		public void ConvertJSON(FileInfo file, SCType filter = SCType.Every)
 		{
-			// Get the relative and absolute file path
-
 			// Load the XML
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(File.ReadAllText(file.FullName));
