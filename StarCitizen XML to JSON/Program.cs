@@ -32,8 +32,8 @@ namespace StarCitizen_XML_to_JSON
 
 			string working_dir = Environment.CurrentDirectory;
 
-			string source = new DirectoryInfo(args[0]).FullName;
-            string destination = new DirectoryInfo((args.Length >= 2) ? args[1] : ".").FullName;
+			string source = new DirectoryInfo(args[0]).FullName + "\\";
+            string destination = new DirectoryInfo((args.Length >= 2) ? args[1] : ".").FullName + "\\";
 			SCType filters = FindParameters(args);
 
 			Logger.LogInfo("Process has started.");
@@ -87,11 +87,19 @@ namespace StarCitizen_XML_to_JSON
 		/// <returns></returns>
 		private static FileInfo[] GetFiles(string source, SCType filter)
 		{
-			return Directory.GetFiles(source, "*.xml", SearchOption.AllDirectories)
+			try
+			{
+				return Directory.GetFiles(source, "*.xml", SearchOption.AllDirectories)
 				.Where(f => (filter & CryXML.DetectType(f)) != SCType.None)
 				.ToList()
 				.ConvertAll(f => new FileInfo(f))
 				.ToArray();
+			}
+			catch (Exception ex)
+			{
+				Logger.LogError(ex.Message);
+			}
+			return new FileInfo[0];
 		}
 
 		private static SCType FindParameters(string[] args)
