@@ -14,34 +14,22 @@ namespace StarCitizen_XML_to_JSON
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="end"></param>
-		public static void Log(string message, char end = '\n')
+		public static void Log(string message, string end = "\n", string start = "")
 		{
-			string line = $"[+] {message}{end}";
+			string line = $"{start}[+] {message}{end}";
 			Console.Write(line);
-			sb.Append(DateTime.Now.ToString($"[{date_format}] ") + line);
-		}
+			sb.Append(DateTime.Now.ToString($"[{date_format}] ") + $"[+] {message}\n");
+		 }
 		/// <summary>
 		/// Print INFO log
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="end"></param>
-		public static void LogInfo(string message, char end = '\n')
+		public static void LogInfo(string message, string end = "\n", string start = "")
 		{
-			string line = $"[i] {message}{end}";
+			string line = $"{start}[*] {message}{end}";
 			Console.Write(line);
-			sb.Append(DateTime.Now.ToString($"[{date_format}] ") + line);
-		}
-
-		/// <summary>
-		/// Print log without prefix
-		/// </summary>
-		/// <param name="message"></param>
-		/// <param name="end"></param>
-		public static void LogEmpty(string message, char end = '\n')
-		{
-			string line = $"{message}{end}";
-			Console.Write(line);
-			sb.Append(DateTime.Now.ToString($"[{date_format}] ") + line);
+			sb.Append(DateTime.Now.ToString($"[{date_format}] ") + $"[*] {message}\n");
 		}
 
 		/// <summary>
@@ -49,11 +37,11 @@ namespace StarCitizen_XML_to_JSON
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="end"></param>
-		public static void LogError(string message, char end = '\n')
+		public static void LogError(string message, string end = "\n", string start = "")
 		{
-			string line = $"[-] {message}{end}";
+			string line = $"{start}[-] {message}{end}";
 			Console.Write(line);
-			sb.Append(DateTime.Now.ToString($"[{date_format}] ") + line);
+			sb.Append(DateTime.Now.ToString($"[{date_format}] ") + $"[-] {message}\n");
 		}
 
 		/// <summary>
@@ -61,11 +49,11 @@ namespace StarCitizen_XML_to_JSON
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="end"></param>
-		public static void LogWarning(string message, char end = '\n')
+		public static void LogWarning(string message, string end = "\n", string start = "")
 		{
-			string line = $"[!] {message}{end}";
+			string line = $"{start}[!] {message}{end}";
 			Console.Write(line);
-			sb.Append(DateTime.Now.ToString($"[{date_format}] ") + line);
+			sb.Append(DateTime.Now.ToString($"[{date_format}] ") + $"[!] {message}\n");
 		}
 
 		/// <summary>
@@ -73,15 +61,25 @@ namespace StarCitizen_XML_to_JSON
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="end"></param>
-		public static void LogDebug(string message, char end = '\n')
+		public static void LogDebug(string message, string end = "\n", string start = "")
 		{
+			string line = $"{start}[D] {message}{end}";
+			sb.Append(DateTime.Now.ToString($"[{date_format}] ") + $"[D] {message}\n");
 #if RELEASE
 			return;
 #endif
-			string line = $"[D] {message}{end}";
-
 			Console.Write(line);
-			sb.Append(DateTime.Now.ToString($"[{date_format}] ") + line);
+		}
+
+		/// <summary>
+		/// Print log without prefix
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="end"></param>
+		public static void LogEmpty(string message = "", string end = "\n", string start = "")
+		{
+			string line = $"{start}{message}{end}";
+			Console.Write(line);
 		}
 
 		/// <summary>
