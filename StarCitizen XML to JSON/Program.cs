@@ -56,24 +56,30 @@ namespace StarCitizen_XML_to_JSON
 			foreach (var f in files)
 			{
 				Logger.Log($"Converting {f.Name}..", "");
+
+// catch exception on Release build
+#if RELEASE
 				try
 				{
+#endif
 					cryXml.ConvertJSON(f, filters);
 					Logger.Log($"Converting {f.Name} Done", start: "\r");
+#if RELEASE
 				}
-					catch (Exception ex)
+				catch (Exception ex)
 				{
-					Logger.LogError($"Converting {f.Name} ERROR", start: "\r");
+				Logger.LogError($"Converting {f.Name} ERROR", start: "\r", exception: ex);
 					hasException = true;
+
 				}
-				break;
+#endif
 			}
 
 			if (hasException)
 			{
 				Logger.LogEmpty("=====================================");
 				Logger.LogError("Something went wrong!");
-				Logger.LogError($"More details can be found in: '{Environment.CurrentDirectory + "/crashlog.txt"}'");
+				Logger.LogError($"More details can be found in: '{Environment.CurrentDirectory + "/" + Logger.filename}'");
 				Logger.LogEmpty("=====================================");
 			}
 
