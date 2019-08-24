@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using Newtonsoft.Json;
 
@@ -17,19 +18,39 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Ship
 				Directory.CreateDirectory(Path.Combine(destination, directory_name));
 		}
 
+		/// <summary>
+		/// Process the XML conversion
+		/// </summary>
 		public override void Process()
 		{
-			var root = doc.SelectSingleNode("/*");
+			var root = doc.SelectSingleNode("/*"); // get the root element
+			var models = GetShipsModels(root); // get all ships models XML
 
-			var models = GetShipsModels(root); // Get all ships models XML
+			// remove the <Modifications> tag
+			var modif = doc.SelectSingleNode("//Modifications");
+			if (modif != null) modif.ParentNode.RemoveChild(modif);
+
+			WriteFile(doc); // write the main ship
+
+			// write all models of the main ship
 			foreach (var m in models)
 			{
-				if(m.model != null)
+				// remove the <Modifications> tag
+				modif = m.model.FirstChild.SelectSingleNode("//Modifications");
+				if (modif != null) modif.ParentNode.RemoveChild(modif);
+
+				if (m.model != null)
 					WriteFile(m.model);
 			}
 
+			base.ValidateFiles();
 		}
 
+		/// <summary>
+		/// Parse from XML all modifications (models)
+		/// </summary>
+		/// <param name="root"></param>
+		/// <returns></returns>
 		private JShipModification[] GetShipsModels(XmlNode root)
 		{
 			List<JShipModification> modifications = new List<JShipModification>();
@@ -38,7 +59,7 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Ship
 			if (root.SelectSingleNode("/Vehicle/Modifications") == null)
 				return new JShipModification[0];
 
-			// Load all modifications
+			// load all modifications
 			foreach (XmlNode node in root.SelectSingleNode("/Vehicle/Modifications").ChildNodes)
 			{
 				var n_name = node.Attributes["name"]?.Value ?? null;
@@ -55,30 +76,40 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Ship
 			return modifications.ToArray();
 		}
 
+		/// <summary>
+		/// Write to a JSON file the edited XMLDocument
+		/// </summary>
+		/// <param name="doc">document to write</param>
 		private void WriteFile(XmlDocument doc)
 		{
 			XmlNode root = doc.FirstChild;
 
 			var name = (root.Attributes["displayname"] ?? root.Attributes["name"]).Value;
+			var filename = Path.Combine(
+					base.destination, directory_name, name.Replace(" ", "_") + ".json");
 
-			StringBuilder sb = new StringBuilder();
-			StringWriter sw = new StringWriter(sb);
-			using (JsonWriter writer = new JsonTextWriter(sw))
+			using (StreamWriter writer = new StreamWriter(filename))
 			{
-				writer.WriteStartObject();
+				// serealize XML to JSON
+				var plain_json = JsonConvert.SerializeXmlNode(root, Newtonsoft.Json.Formatting.Indented, true);
 
-				writer.WritePropertyName("displayname");
+				// remove @ before property name
+				plain_json = Regex.Replace(plain_json, "([\"\'])(@)((.*?)[\"\']\\:)", "$1$3");
 
-				writer.WriteValue(Sanitize(name));
+				// remove bad leading zero (eg: '01.5' or '040')
+				plain_json = Regex.Replace(plain_json, "([\"\'])(0)([0-9\\.]+)([\"\'])", "$1$3$4");
 
+				// add leading 0 on decaml ".x"
+				plain_json = Regex.Replace(plain_json, "([\"\'])(\\.[0-9]+)([\"\'])", "0$2");
 
-				writer.WriteEndObject();
+				// remove '"' to numbers (int, float, double,..)
+				plain_json = Regex.Replace(plain_json, "([\"\'])([0-9]*[(\\.[0-9]+]?)([\"\'])", "$2");
+
+				writer.Write(plain_json);
 			}
 
-			using (StreamWriter writer = new StreamWriter(Path.Combine(base.destination, directory_name, name.Replace(" ", "_") + ".json")))
-			{
-				writer.Write(sb.ToString());
-			}
+			// add the file to the files list to be validated later
+			base.generatedFiles.Add(new FileInfo(filename));
 		}
 	}
 }
