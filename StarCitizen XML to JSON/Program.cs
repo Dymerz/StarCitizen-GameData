@@ -10,6 +10,8 @@ namespace StarCitizen_XML_to_JSON
 
 		static void Main(string[] args)
 		{
+			Console.OutputEncoding = System.Text.Encoding.UTF8;
+
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 			bool hasException = false;
 
@@ -56,11 +58,11 @@ namespace StarCitizen_XML_to_JSON
 				return;
 			}
 
-			Logger.Log("Loading directory..");
-			var files = GetFiles(source, filters);
+			Logger.Log("Loading directory.. ", end: "");
+			var files = (string[])Progress.Process(() => GetFiles(source, filters), "Done");
 
-			Logger.Log("Preparing resources..");
-			CryXML cryXml = new CryXML(source, destination);
+			Logger.Log("Preparing resources.. ", end: "");
+			CryXML cryXml = (CryXML)Progress.Process(() => new CryXML(source, destination), "Done");
 
 			Logger.LogInfo($"Files to be converted: {files.Length}");
 			Logger.LogEmpty();
@@ -70,20 +72,20 @@ namespace StarCitizen_XML_to_JSON
 			{
 				FileInfo f = new FileInfo(file);
 
-				Logger.Log($"Converting {f.Name}..", "");
+				Logger.Log($"Converting {f.Name}.. ", end: "");
 
-// catch exception on Release build
+				// catch exception on Release build
 #if RELEASE
 				try
 				{
 #endif
-					cryXml.ConvertJSON(f, filters);
-					Logger.Log($"Converting {f.Name} Done", start: "\r");
+					Progress.Process(() => cryXml.ConvertJSON(f, filters), "Done");
+					throw new Exception();
 #if RELEASE
 				}
 				catch (Exception ex)
 				{
-					Logger.LogError($"Converting {f.Name} ERROR", start: "\r", exception: ex);
+					Logger.LogError($"Converting {f.Name}.. FAILED 🔥", start: "\r", exception: ex);
 					hasException = true;
 				}
 #endif
