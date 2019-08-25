@@ -73,11 +73,9 @@ namespace StarCitizen_XML_to_JSON
 			string line = $"{start}[D] {message}{end}";
 			sb.Append(DateTime.Now.ToString($"[{date_format}] ") + $"[D] {message}\n");
 #if RELEASE
-			return;
-#endif
 			if (!Program.debug)
 				return;
-
+#endif
 			Console.Write(line);
 		}
 
