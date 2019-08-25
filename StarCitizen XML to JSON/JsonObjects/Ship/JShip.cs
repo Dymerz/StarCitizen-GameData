@@ -6,7 +6,6 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Ship
 {
 	internal class JShip : JObject
 	{
-		//public new string directory_name = "Ships";
 		internal override string directory_name { get => "Ships"; }
 
 		public JShip(XmlDocument doc, FileInfo file, string destination, string source) : base(doc, file, destination, source) { }
