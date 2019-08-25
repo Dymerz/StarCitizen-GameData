@@ -75,6 +75,9 @@ namespace StarCitizen_XML_to_JSON
 #if RELEASE
 			return;
 #endif
+			if (!Program.debug)
+				return;
+
 			Console.Write(line);
 		}
 
