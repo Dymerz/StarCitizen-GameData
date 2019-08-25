@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Xml;
 using StarCitizen_XML_to_JSON.JsonObjects.Ship;
+using StarCitizen_XML_to_JSON.JsonObjects.Weapon;
 
 namespace StarCitizen_XML_to_JSON
 {
@@ -44,8 +43,7 @@ namespace StarCitizen_XML_to_JSON
 					jObject = new JShip(doc, file, destination);
 					break;
 				case SCType.Weapon:
-					//jObject = new JWeapon(root, destination);
-					throw new NotImplementedException();
+					jObject = new JWeapon(doc, file, destination);
 					break;
 
 				case SCType.None:
@@ -75,16 +73,13 @@ namespace StarCitizen_XML_to_JSON
 		/// <returns></returns>
 		private static SCType DetectType(XmlDocument xfile)
 		{
-			switch (xfile.SelectSingleNode("/*").Name)
-			{
-				case "Vehicle":
-					return SCType.Ship;
-				case "EntityClassDefinition.apar_special_ballistic_01":
+			if(xfile.SelectSingleNode("/*").Name.Equals("Vehicle"))
+				return SCType.Ship;
+
+			if(xfile.SelectSingleNode("/*").Name.StartsWith("EntityClassDefinition."))
 					return SCType.Weapon;
 
-				default:
-					return SCType.None;
-			}
+			return SCType.None;
 		}
 	}
 }
