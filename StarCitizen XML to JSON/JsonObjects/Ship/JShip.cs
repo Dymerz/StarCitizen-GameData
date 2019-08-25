@@ -1,22 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Xml;
-using Newtonsoft.Json;
 
 namespace StarCitizen_XML_to_JSON.JsonObjects.Ship
 {
 	internal class JShip : JObject
 	{
-		public new string directory_name = "Ships";
+		//public new string directory_name = "Ships";
+		internal override string directory_name { get => "Ships"; }
 
-		public JShip(XmlDocument doc, FileInfo file, string destination) : base(doc, file, destination)
-		{
-			if (!Directory.Exists(Path.Combine(destination, directory_name)))
-				Directory.CreateDirectory(Path.Combine(destination, directory_name));
-		}
+		public JShip(XmlDocument doc, FileInfo file, string destination) : base(doc, file, destination) { }
 
 		/// <summary>
 		/// Process the XML conversion
@@ -30,7 +23,9 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Ship
 			var modif = doc.SelectSingleNode("//Modifications");
 			if (modif != null) modif.ParentNode.RemoveChild(modif);
 
-			WriteFile(doc); // write the main ship
+
+			var name = (root.Attributes["displayname"] ?? root.Attributes["name"]).Value;
+			base.WriteFile(doc, name); // write the main ship
 
 			// write all models of the main ship
 			foreach (var m in models)
@@ -40,7 +35,10 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Ship
 				if (modif != null) modif.ParentNode.RemoveChild(modif);
 
 				if (m.model != null)
-					WriteFile(m.model);
+				{
+					name = (root.Attributes["displayname"] ?? root.Attributes["name"]).Value;
+					base.WriteFile(m.model, name);
+				}	
 			}
 
 			base.ValidateFiles();
@@ -74,42 +72,6 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Ship
 			}
 
 			return modifications.ToArray();
-		}
-
-		/// <summary>
-		/// Write to a JSON file the edited XMLDocument
-		/// </summary>
-		/// <param name="doc">document to write</param>
-		private void WriteFile(XmlDocument doc)
-		{
-			XmlNode root = doc.FirstChild;
-
-			var name = (root.Attributes["displayname"] ?? root.Attributes["name"]).Value;
-			var filename = Path.Combine(
-					base.destination, directory_name, name.Replace(" ", "_") + ".json");
-
-			using (StreamWriter writer = new StreamWriter(filename))
-			{
-				// serealize XML to JSON
-				var plain_json = JsonConvert.SerializeXmlNode(root, Newtonsoft.Json.Formatting.Indented, true);
-
-				// remove @ before property name
-				plain_json = Regex.Replace(plain_json, "([\"\'])(@)((.*?)[\"\']\\:)", "$1$3");
-
-				// remove bad leading zero (eg: '01.5' or '040')
-				plain_json = Regex.Replace(plain_json, "([\"\'])(0)([0-9\\.]+)([\"\'])", "$1$3$4");
-
-				// add leading 0 on decaml ".x"
-				plain_json = Regex.Replace(plain_json, "([\"\'])(\\.[0-9]+)([\"\'])", "0$2");
-
-				// remove '"' to numbers (int, float, double,..)
-				plain_json = Regex.Replace(plain_json, "([\"\'])([0-9]*[(\\.[0-9]+]?)([\"\'])", "$2");
-
-				writer.Write(plain_json);
-			}
-
-			// add the file to the files list to be validated later
-			base.generatedFiles.Add(new FileInfo(filename));
 		}
 	}
 }
