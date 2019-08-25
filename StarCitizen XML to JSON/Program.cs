@@ -36,11 +36,11 @@ namespace StarCitizen_XML_to_JSON
             string destination = new DirectoryInfo((args.Length >= 2) ? args[1] : ".").FullName + "\\";
 			SCType filters = FindParameters(args);
 
-			Logger.LogInfo("Process has started.");
-			Logger.LogInfo("Parameters:");
+			Logger.LogEmpty("Process has started.");
+			Logger.LogEmpty("Parameters:");
 			Logger.LogEmpty($"\tSource:\t\t{source}");
 			Logger.LogEmpty($"\tDestination:\t{destination}");
-			Logger.LogInfo($"Filter:");
+			Logger.LogEmpty($"Filter:");
 			Logger.LogEmpty("\tShips: " + ((filters & SCType.Ship) == SCType.None ? "No" : "Yes"));
 			Logger.LogEmpty("\tWeapons: " + ((filters & SCType.Weapon) == SCType.None ? "No" : "Yes"));
 			Logger.LogEmpty("\tStations: " + ((filters & SCType.None) == SCType.None ? "No" : "Yes"));
@@ -68,9 +68,8 @@ namespace StarCitizen_XML_to_JSON
 				}
 				catch (Exception ex)
 				{
-				Logger.LogError($"Converting {f.Name} ERROR", start: "\r", exception: ex);
+					Logger.LogError($"Converting {f.Name} ERROR", start: "\r", exception: ex);
 					hasException = true;
-
 				}
 #endif
 			}
@@ -110,7 +109,7 @@ namespace StarCitizen_XML_to_JSON
 
 		private static SCType FindParameters(string[] args)
 		{
-			SCType parameters = 0;
+			SCType parameters = SCType.None;
 
 			foreach (string arg in args)
 			{
@@ -124,6 +123,10 @@ namespace StarCitizen_XML_to_JSON
 					case "--weapons":
 					case "-w":
 						parameters |= SCType.Weapon;
+						break;
+
+					default:
+						parameters = SCType.None;
 						break;
 				}
 			}
