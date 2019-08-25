@@ -11,14 +11,17 @@ namespace StarCitizen_XML_to_JSON
 	/// </summary>
 	public class CryXML
 	{
-		public string source{ get; private set;  } = null;
-		public string destination { get; private set;  } = null;
+		public static CryGame game { get; internal set; } = null;
+
+		public string source{ get; internal set; } = null;
+		public string destination { get; internal set; } = null;
 
 		public CryXML(string source, string destination)
 		{
 			this.source = source ?? throw new ArgumentNullException(nameof(source));
 			this.destination = destination ?? throw new ArgumentNullException(nameof(destination));
 
+			game = new CryGame(source);
 			Directory.CreateDirectory(this.destination);
 		}
 		/// <summary>
@@ -40,10 +43,10 @@ namespace StarCitizen_XML_to_JSON
 			switch (type)
 			{
 				case SCType.Ship:
-					jObject = new JShip(doc, file, destination);
+					jObject = new JShip(doc, file, destination, source);
 					break;
 				case SCType.Weapon:
-					jObject = new JWeapon(doc, file, destination);
+					jObject = new JWeapon(doc, file, destination, source);
 					break;
 
 				case SCType.None:
