@@ -14,15 +14,17 @@ namespace StarCitizen_XML_to_JSON
 		internal List<FileInfo> generatedFiles;
 
 		public string destination;
+		public string source;
 
 		abstract internal string directory_name { get;}
 
 	
-		protected JObject(XmlDocument doc, FileInfo file, string destination)
+		protected JObject(XmlDocument doc, FileInfo file, string destination, string source)
 		{
 			this.doc = doc ?? throw new ArgumentNullException(nameof(doc));
 			this.file = file ?? throw new ArgumentNullException(nameof(file));
 			this.destination = destination ?? throw new ArgumentNullException(nameof(destination));
+			this.source = source ?? throw new ArgumentNullException(nameof(source));
 
 			this.generatedFiles = new List<FileInfo>();
 			doc.Load(file.FullName);
