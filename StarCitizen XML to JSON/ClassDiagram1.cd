@@ -3,22 +3,14 @@
   <Class Name="StarCitizen_XML_to_JSON.JObject">
     <Position X="6.25" Y="6.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AgAAAAAAAACAAAIAAgAIAAAAAAAAAAQABAAABAAAAAA=</HashCode>
+      <HashCode>AgAAAAAAAACAAAIAAgAIAAAAAAAAAAQABAAADAAAAAA=</HashCode>
       <FileName>JObject.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="StarCitizen_XML_to_JSON.JsonObjects.Ship.JShip">
     <Position X="9.25" Y="5" Width="1.5" />
-    <InheritanceLine Type="StarCitizen_XML_to_JSON.JObject" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="7.75" Y="7.813" />
-        <Point X="8.438" Y="7.813" />
-        <Point X="8.438" Y="5.75" />
-        <Point X="9.25" Y="5.75" />
-      </Path>
-    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAECAAAAAAgAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAECAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>JsonObjects\Ship\JShip.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -50,8 +42,15 @@
       <FileName>CryXML.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="StarCitizen_XML_to_JSON.JsonObjects.Weapon.JWeapon">
+    <Position X="9.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>JsonObjects\Weapon\JWeapon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Enum Name="StarCitizen_XML_to_JSON.SCType">
-    <Position X="6.5" Y="3.75" Width="1.5" />
+    <Position X="4.5" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAACAAAgAEAAAAAEAAAA=</HashCode>
       <FileName>SCType.cs</FileName>
