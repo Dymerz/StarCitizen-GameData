@@ -29,14 +29,11 @@ namespace StarCitizen_XML_to_JSON
 		/// </summary>
 		/// <param name="file">FileInfo: the file to convert</param>
 		/// <param name="filter">SCType: filter</param>
-		public void ConvertJSON(FileInfo file, SCType filter = SCType.Every)
+		public void ConvertJSON(FileInfo file, SCType type)
 		{
 			// Load the XML
 			XmlDocument doc = new XmlDocument();
 			doc.LoadXml(File.ReadAllText(file.FullName));
-
-			// Get the file type
-			SCType type = DetectType(doc);
 
 			// Cast JObject to the right type
 			JObject jObject = null;
@@ -48,7 +45,18 @@ namespace StarCitizen_XML_to_JSON
 				case SCType.Weapon:
 					jObject = new JWeapon(doc, file, destination, source);
 					break;
-
+				case SCType.Commoditie:
+					break;
+				case SCType.Tag:
+					break;
+				case SCType.Shop:
+					break;
+				case SCType.Manufacturer:
+					break;
+				case SCType.Starmap:
+					break;
+				case SCType.Every:
+					break;
 				case SCType.None:
 				default:
 					throw new Exception($"Unknow CSType: '{file.FullName}', cannot determine the SCType");
@@ -79,8 +87,11 @@ namespace StarCitizen_XML_to_JSON
 			if(xfile.SelectSingleNode("/*").Name.Equals("Vehicle"))
 				return SCType.Ship;
 
-			if(xfile.SelectSingleNode("/*").Name.StartsWith("EntityClassDefinition."))
-					return SCType.Weapon;
+			if (new FileInfo(xfile.BaseURI).Directory.Name.ToLower() == "fps_weapons")
+				return SCType.Weapon;
+
+			if (new FileInfo(xfile.BaseURI).Directory.FullName.ToLower().Contains("commodities"))
+				return SCType.Commoditie;
 
 			return SCType.None;
 		}
