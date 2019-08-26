@@ -19,11 +19,15 @@ namespace StarCitizen_XML_to_JSON
 
 		public XmlNode FindRef(string uuid)
 		{
+			if (uuid == "00000000-0000-0000-0000-000000000000")
+				return null;
 			return doc.SelectSingleNode($"//*[@__ref=\"{uuid}\"]");
 		}
 
 		public XmlNodeList FindRefs(string uuid)
 		{
+			if (uuid == "00000000-0000-0000-0000-000000000000")
+				return null;
 			return doc.SelectNodes($"//*[@__ref=\"{uuid}\"]");
 		}
 	}
