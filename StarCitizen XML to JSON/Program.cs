@@ -100,7 +100,7 @@ namespace StarCitizen_XML_to_JSON
 					Logger.LogInfo($"Category [{category.ToString()}]");
 				}
 
-				Logger.Log($"Converting {f.Name}.. ", end: "");
+				Logger.Log($"Converting {f.Name}..  ", end: "");
 
 				// catch exception on Release build
 #if RELEASE
@@ -121,6 +121,10 @@ namespace StarCitizen_XML_to_JSON
 			Exit(hasException);
 		}
 
+		/// <summary>
+		/// Exit the application
+		/// </summary>
+		/// <param name="hasException"></param>
 		private static void Exit(bool hasException)
 		{
 			if (hasException)
@@ -161,6 +165,11 @@ namespace StarCitizen_XML_to_JSON
 			return new Tuple<string, SCType>[0];
 		}
 
+		/// <summary>
+		/// Parse all args from terminal
+		/// </summary>
+		/// <param name="args"></param>
+		/// <returns></returns>
 		private static SCType FindParameters(string[] args)
 		{
 			SCType parameters = SCType.None;
