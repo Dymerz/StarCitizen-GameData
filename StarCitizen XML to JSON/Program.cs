@@ -11,7 +11,6 @@ namespace StarCitizen_XML_to_JSON
 		static void Main(string[] args)
 		{
 			Console.OutputEncoding = System.Text.Encoding.UTF8;
-
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 			bool hasException = false;
 
@@ -28,9 +27,13 @@ namespace StarCitizen_XML_to_JSON
 				Logger.LogEmpty("\t\t\tdefault: current working directory.");
 				Logger.LogEmpty();
 				Logger.LogEmpty("[Filters]");
-				Logger.LogEmpty("\t--ships, -s\t: Convert Ships.");
-				Logger.LogEmpty("\t--weapons, -w\t: Convert Weapons.");
-				Logger.LogEmpty("\t--stations, -S\t: Convert Stations.");
+				Logger.LogEmpty("\t--ships, -s\t\tConvert Ships.");
+				Logger.LogEmpty("\t--weapons, -w\t\tConvert Weapons.");
+				Logger.LogEmpty("\t--commodities, -c\tConvert Commodities.");
+				Logger.LogEmpty("\t--tags, -t\t\tConvert Tags.");
+				Logger.LogEmpty("\t--shops, -S\t\tConvert Shops.");
+				Logger.LogEmpty("\t--manufacturers, -m\tConvert Manufacturers.");
+				Logger.LogEmpty("\t--starmap, -sh\t\tConvert Starmap.");
 				return;
 			}
 
@@ -49,6 +52,7 @@ namespace StarCitizen_XML_to_JSON
 			Logger.LogEmpty("\tShips: " + ((filters & SCType.Ship) == SCType.None ? "No" : "Yes"));
 			Logger.LogEmpty("\tWeapons: " + ((filters & SCType.Weapon) == SCType.None ? "No" : "Yes"));
 			Logger.LogEmpty("\tStations: " + ((filters & SCType.None) == SCType.None ? "No" : "Yes"));
+			Logger.LogEmpty("\tCommodities: " + ((filters & SCType.Commoditie) == SCType.None ? "No" : "Yes"));
 			Logger.LogEmpty();
 
 			if (filters == SCType.None)
@@ -59,18 +63,42 @@ namespace StarCitizen_XML_to_JSON
 			}
 
 			Logger.Log("Loading directory.. ", end: "");
-			var files = (string[])Progress.Process(() => GetFiles(source, filters), "Done");
+			Tuple<string, SCType>[] files = null;
+			try
+			{
+				files = (Tuple<string, SCType>[])Progress.Process(() => GetFiles(source, filters), "Done");
+			}
+			catch (Exception ex)
+			{
+				Logger.LogError("Loading directory.. FAILED", ex, start: "\r");
+				Exit(true);
+			}
 
 			Logger.Log("Preparing resources.. ", end: "");
-			CryXML cryXml = (CryXML)Progress.Process(() => new CryXML(source, destination), "Done");
+			CryXML cryXml = null;
+			try
+			{
+				cryXml = (CryXML)Progress.Process(() => new CryXML(source, destination), "Done");
+			}
+			catch (Exception ex)
+			{
+				Logger.LogError("Preparing resources.. FAILED", ex, start: "\r");
+				Exit(true);
+			}
 
 			Logger.LogInfo($"Files to be converted: {files.Length}");
 			Logger.LogEmpty();
-			Logger.Log("Starting..");
+			Logger.LogInfo("Starting..");
 
+			var category = SCType.None;
 			foreach (var file in files)
 			{
-				FileInfo f = new FileInfo(file);
+				FileInfo f = new FileInfo(file.Item1);
+				if (category != file.Item2)
+				{
+					category = file.Item2;
+					Logger.LogInfo($"Category [{category.ToString()}]");
+				}
 
 				Logger.Log($"Converting {f.Name}.. ", end: "");
 
@@ -79,8 +107,7 @@ namespace StarCitizen_XML_to_JSON
 				try
 				{
 #endif
-					Progress.Process(() => cryXml.ConvertJSON(f, filters), "Done");
-					throw new Exception();
+					Progress.Process(() => cryXml.ConvertJSON(f, file.Item2), "Done");
 #if RELEASE
 				}
 				catch (Exception ex)
@@ -91,15 +118,22 @@ namespace StarCitizen_XML_to_JSON
 #endif
 			}
 
+			Exit(hasException);
+		}
+
+		private static void Exit(bool hasException)
+		{
 			if (hasException)
 			{
+				Logger.LogEmpty();
 				Logger.LogEmpty("=====================================");
 				Logger.LogError("Something went wrong!");
 				Logger.LogError($"More details can be found in: '{Environment.CurrentDirectory + "/" + Logger.filename}'");
 				Logger.LogEmpty("=====================================");
 			}
-
+			Logger.LogEmpty();
 			Logger.WriteLog();
+			Environment.Exit(hasException ? 1 : 0);
 		}
 
 		/// <summary>
@@ -107,23 +141,24 @@ namespace StarCitizen_XML_to_JSON
 		/// </summary>
 		/// <param name="source">Where to search for XML</param>
 		/// <returns></returns>
-		private static string[] GetFiles(string source, SCType filter)
+		private static Tuple<string, SCType>[] GetFiles(string source, SCType filter)
 		{
 			try
 			{
 				return Directory.GetFiles(source, "*.xml", SearchOption.AllDirectories)
-				.Where(f => 
-					!f.ToLower().EndsWith("game.xml") && 
-					(filter & CryXML.DetectType(f)) != SCType.None)
-				.ToList()
-				//.ConvertAll(f => new FileInfo(f))
-				.ToArray();
+					.Where(f =>
+						!f.ToLower().EndsWith("game.xml") &&
+						(filter & CryXML.DetectType(f)) != SCType.None)
+					.ToList()
+					.ConvertAll(f => new Tuple<string, SCType>(f, CryXML.DetectType(f)))
+					.OrderBy(f => f.Item2)
+					.ToArray();
 			}
 			catch (Exception ex)
 			{
 				Logger.LogError(ex.Message);
 			}
-			return new string[0];
+			return new Tuple<string, SCType>[0];
 		}
 
 		private static SCType FindParameters(string[] args)
@@ -142,6 +177,11 @@ namespace StarCitizen_XML_to_JSON
 					case "--weapons":
 					case "-w":
 						parameters |= SCType.Weapon;
+						break;
+
+					case "--commodities":
+					case "-c":
+						parameters |= SCType.Commoditie;
 						break;
 
 					case "--debug":
