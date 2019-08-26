@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Xml;
+using StarCitizen_XML_to_JSON.JsonObjects.Commodities;
 using StarCitizen_XML_to_JSON.JsonObjects.Ship;
 using StarCitizen_XML_to_JSON.JsonObjects.Weapon;
 
@@ -46,6 +47,7 @@ namespace StarCitizen_XML_to_JSON
 					jObject = new JWeapon(doc, file, destination, source);
 					break;
 				case SCType.Commoditie:
+					jObject = new JCommodity(doc, file, destination, source);
 					break;
 				case SCType.Tag:
 					break;
