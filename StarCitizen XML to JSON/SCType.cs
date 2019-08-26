@@ -6,9 +6,15 @@ namespace StarCitizen_XML_to_JSON
 {
 	public enum SCType
 	{
-		None	= 0b000, // 0
-		Ship	= 0b001, // 1
-		Weapon	= 0b010, // 2
-		Every	= 0b111, // 7
+		None			= 0,		// 0
+		Ship			= 1 << 1,	// 1
+		Weapon			= 1 << 2,	// 2
+		Commoditie		= 1 << 3,	// 4
+		Tag				= 1 << 4,	// 8
+		Shop			= 1 << 5,	// 16
+		Manufacturer	= 1 << 6,	// 32
+		Starmap			= 1 << 7,	// 64
+
+		Every			= (Starmap * 2) - 1,
 	}
 }
