@@ -1,6 +1,7 @@
 ﻿using StarCitizen_XML_to_JSON.Cry;
 using StarCitizen_XML_to_JSON.JsonObjects;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -20,6 +21,25 @@ namespace StarCitizen_XML_to_JSON
 			Console.OutputEncoding = System.Text.Encoding.UTF8;
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 			bool hasException = false;
+
+
+			//List<string> t = new List<string>()
+			//{
+			//	"AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA", "AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA",
+			//	"AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA", "AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA",
+			//	"AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA", "AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA",
+			//	"AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA", "AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA",
+			//	"AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA", "AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA",
+			//	"AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA", "AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA",
+			//	"AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA", "AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA",
+			//	"AAAAAAAAAAAAA", "7867687676",  "hhhhhh", "AAAAAAAAAAAAA", "qzqzdzqzd",  "BBBBB",
+			//};
+			//foreach (string a in new ProgressBar(t, "DEBUG", true))
+			//{
+			//	Logger.Log(a);
+			//	System.Threading.Thread.Sleep(50);
+			//}
+			//Exit(false, false);
 
 			if (args.Length < 1 || args.Contains("-h") || args.Contains("--help"))
 			{
@@ -85,7 +105,7 @@ namespace StarCitizen_XML_to_JSON
 			catch (Exception ex)
 			{
 				Logger.LogError("Loading directory.. FAILED", ex, start: "\r");
-				Exit(true);
+				Exit(true, saveCache: false);
 			}
 
 			Logger.Log("Preparing resources.. ", end: "");
@@ -97,7 +117,7 @@ namespace StarCitizen_XML_to_JSON
 			catch (Exception ex)
 			{
 				Logger.LogError("Preparing resources.. FAILED", ex, start: "\r");
-				Exit(true);
+				Exit(true, saveCache: false);
 			}
 
 			if (useCache)
@@ -118,7 +138,7 @@ namespace StarCitizen_XML_to_JSON
 				catch (Exception ex)
 				{
 					Logger.LogError("Loading cache.. FAILED", ex, start: "\r");
-					Exit(true);
+					Exit(true, saveCache: false);
 				}
 			}
 
@@ -127,14 +147,14 @@ namespace StarCitizen_XML_to_JSON
 			Logger.LogInfo("Starting..");
 
 			var category = SCType.None;
-			foreach (var file in files)
+			foreach (Tuple<string, SCType> file in new ProgressBar(files, "Converting", true))
 			{
 				FileInfo f = new FileInfo(file.Item1);
 				if (category != file.Item2)
 				{
 					category = file.Item2;
 					Logger.LogEmpty();
-					Logger.LogInfo($"Category [{category.ToString()}]");
+					Logger.LogInfo($"Category [{category.ToString()}]", clear_line: true);
 				}
 
 				Logger.Log($"Converting {f.Name}..  ", end: "");
@@ -162,12 +182,16 @@ namespace StarCitizen_XML_to_JSON
 		/// Exit the application
 		/// </summary>
 		/// <param name="hasException"></param>
-		private static void Exit(bool hasException)
+		private static void Exit(bool hasException, bool saveCache = true)
 		{
 			Logger.LogEmpty();
-			Logger.LogInfo("Saving cache..  ", end: "");
-			Progress.Process(() => CryXML.game.SaveCache(), "Done");
-			Logger.LogEmpty();
+			if (saveCache)
+			{
+				Logger.LogInfo("Saving cache..  ", end: "");
+				Progress.Process(() => CryXML.game.SaveCache(), "Done");
+				Logger.LogEmpty();
+			}
+			
 			Logger.LogInfo($"Output files: {JObject.converted_count}");
 			Logger.LogInfo($"Execution time: {(DateTime.Now-starttime).TotalSeconds.ToString("00.00s")}");
 
