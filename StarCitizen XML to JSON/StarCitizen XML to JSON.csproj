@@ -6,6 +6,7 @@
     <RootNamespace>StarCitizen_XML_to_JSON</RootNamespace>
     <StartupObject>StarCitizen_XML_to_JSON.Program</StartupObject>
     <ApplicationIcon />
+    <AssemblyName>StarCitizen_XML_to_JSON</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
