@@ -51,7 +51,7 @@ namespace StarCitizen_XML_to_JSON
 
 			task = Task.Run(() => 
 			{
-				while (task.Status == TaskStatus.Running && run)
+				while (task != null && task.Status == TaskStatus.Running && run)
 				{
 					Loop();
 					task.Wait(animation_delay);
