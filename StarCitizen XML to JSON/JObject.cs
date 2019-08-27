@@ -9,6 +9,8 @@ namespace StarCitizen_XML_to_JSON
 {
 	abstract class JObject
 	{
+		public static int converted_count = 0;
+
 		public XmlDocument doc { get; private protected set; } = null;
 		public FileInfo file;
 		internal List<FileInfo> generatedFiles;
@@ -84,6 +86,7 @@ namespace StarCitizen_XML_to_JSON
 
 			// add the file to the files list to be validated later
 			generatedFiles.Add(new FileInfo(filename));
+			converted_count++;
 		}
 
 		public string Sanitize(string value)
