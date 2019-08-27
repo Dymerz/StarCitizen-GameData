@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using StarCitizen_XML_to_JSON.Cry;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
@@ -17,7 +18,14 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Weapon
 
 			var tags = LoadTags(root);
 			var ammoContainer = LoadMagazine(root);
+			var manufacturer = LoadManufacturer(root);
 			var ammoParams = LoadAmmoParams(ammoContainer);
+
+			if (manufacturer != null)
+			{
+				var manufacturer_imported = doc.ImportNode(manufacturer, true);
+				doc.SelectSingleNode("*/Components/SAttachableComponentParams/AttachDef").AppendChild(manufacturer_imported);
+			}
 
 			if (ammoContainer != null)
 			{
@@ -47,6 +55,19 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Weapon
 			}
 
 			return tags.ToArray();
+		}
+
+		private XmlNode LoadManufacturer(XmlNode root)
+		{
+			if (root == null)
+				return null;
+
+			var uuid = root
+				.SelectSingleNode("./Components/SAttachableComponentParams/AttachDef")?
+				.Attributes["Manufacturer"]?
+				.Value;
+
+			return CryXML.game.FindRef(uuid);
 		}
 
 		private XmlDocument LoadMagazine(XmlNode root)
