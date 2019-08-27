@@ -1,12 +1,18 @@
-﻿using System;
+﻿using StarCitizen_XML_to_JSON.Cry;
+using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace StarCitizen_XML_to_JSON
 {
     class Program
 	{
 		public static bool debug { get; internal set; } = false;
+		public static DateTime starttime = DateTime.Now;
+		public static string assembly_directory =  AppContext.BaseDirectory;
+
+		private static bool useCache = false;
 
 		static void Main(string[] args)
 		{
@@ -16,15 +22,20 @@ namespace StarCitizen_XML_to_JSON
 
 			if (args.Length < 1 || args.Contains("-h") || args.Contains("--help"))
 			{
-				Logger.LogEmpty("Usage: sc_xml_json.exe [source] <destination> [-s|-w|-S]");
+				Logger.LogEmpty("Usage: dotnet StarCitizen_XML_to_JSON.dll [source] <destination> [CONFIG] [FILTER(S)]");
 				Logger.LogEmpty("Convert any StarCitizen XML files to JSON");
 				Logger.LogEmpty();
 				Logger.LogEmpty("[Required]");
 				Logger.LogEmpty("\tsource: \tthe folder to extract XML data.");
 				Logger.LogEmpty();
-				Logger.LogEmpty("[Optional]");
-				Logger.LogEmpty("\tdestination: \twrite all JSON in the destination, respecting source hierarchy.");
+				Logger.LogEmpty("[Config]");
+				Logger.LogEmpty("\tdestination\twrite all JSON in the destination, respecting source hierarchy.");
 				Logger.LogEmpty("\t\t\tdefault: current working directory.");
+				Logger.LogEmpty("\t--debug\t\tprint all Debug infos.");
+				Logger.LogEmpty("\t\t\tdefault: no.");
+				Logger.LogEmpty("\t--cache\t\tuse a local cache to speed up the process.");
+				Logger.LogEmpty("\t\t\tdefault: do not use the cache.");
+				Logger.LogEmpty("\t--help, -h\tprint this message.");
 				Logger.LogEmpty();
 				Logger.LogEmpty("[Filters]");
 				Logger.LogEmpty("\t--ships, -s\t\tConvert Ships.");
@@ -45,6 +56,8 @@ namespace StarCitizen_XML_to_JSON
 
 			Logger.LogEmpty("Process has started.");
 			Logger.LogDebug("DEBUG MODE ENABLED");
+			Logger.LogDebug("Arguments: " + String.Join(' ', args));
+
 			Logger.LogEmpty("Parameters:");
 			Logger.LogEmpty($"\tSource:\t\t{source}");
 			Logger.LogEmpty($"\tDestination:\t{destination}");
@@ -86,6 +99,28 @@ namespace StarCitizen_XML_to_JSON
 				Exit(true);
 			}
 
+			if (useCache)
+			{
+				try
+				{
+					Logger.Log("Loading cache.. ", end: "");
+					var exist = (bool)Progress.Process(() => CryXML.game.LoadCache(), "Done");
+					if (!exist)
+						Logger.Log("Cache is empty");
+				}
+				catch (System.Runtime.Serialization.SerializationException ex)
+				{
+					Logger.LogError("Loading cache.. Format error", ex, start: "\r");
+					Logger.LogWarning("Loading cache failed, the cache will rebuild.");
+					CryXML.game.DeleteCache();
+				}
+				catch (Exception ex)
+				{
+					Logger.LogError("Loading cache.. FAILED", ex, start: "\r");
+					Exit(true);
+				}
+			}
+
 			Logger.LogInfo($"Files to be converted: {files.Length}");
 			Logger.LogEmpty();
 			Logger.LogInfo("Starting..");
@@ -97,6 +132,7 @@ namespace StarCitizen_XML_to_JSON
 				if (category != file.Item2)
 				{
 					category = file.Item2;
+					Logger.LogEmpty();
 					Logger.LogInfo($"Category [{category.ToString()}]");
 				}
 
@@ -127,12 +163,19 @@ namespace StarCitizen_XML_to_JSON
 		/// <param name="hasException"></param>
 		private static void Exit(bool hasException)
 		{
+			Logger.LogEmpty();
+			Logger.LogInfo("Saving cache..  ", end: "");
+			Progress.Process(() => CryXML.game.SaveCache(), "Done");
+			Logger.LogEmpty();
+			Logger.LogInfo($"Output files: {JObject.converted_count}");
+			Logger.LogInfo($"Execution time: {(DateTime.Now-starttime).TotalSeconds.ToString("00.00s")}");
+
 			if (hasException)
 			{
 				Logger.LogEmpty();
 				Logger.LogEmpty("=====================================");
 				Logger.LogError("Something went wrong!");
-				Logger.LogError($"More details can be found in: '{Environment.CurrentDirectory + "/" + Logger.filename}'");
+				Logger.LogError($"More details can be found in: '{Path.Combine(assembly_directory, Logger.filename)}'");
 				Logger.LogEmpty("=====================================");
 			}
 			Logger.LogEmpty();
@@ -178,6 +221,15 @@ namespace StarCitizen_XML_to_JSON
 			{
 				switch (arg)
 				{
+					case "--cache":
+						useCache = true;
+						break;
+
+					case "--debug":
+						debug = true;
+						break;
+
+
 					case "--ships":
 					case "-s":
 						parameters |= SCType.Ship;
@@ -191,14 +243,6 @@ namespace StarCitizen_XML_to_JSON
 					case "--commodities":
 					case "-c":
 						parameters |= SCType.Commoditie;
-						break;
-
-					case "--debug":
-						debug = true;
-						break;
-
-					default:
-						parameters = SCType.None;
 						break;
 				}
 			}
