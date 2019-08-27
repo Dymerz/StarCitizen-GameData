@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Xml;
+using StarCitizen_XML_to_JSON.JsonObjects;
 using StarCitizen_XML_to_JSON.JsonObjects.JCommodity;
 using StarCitizen_XML_to_JSON.JsonObjects.Ship;
 using StarCitizen_XML_to_JSON.JsonObjects.Weapon;

@@ -1,4 +1,5 @@
 ﻿using StarCitizen_XML_to_JSON.Cry;
+using StarCitizen_XML_to_JSON.JsonObjects;
 using System;
 using System.IO;
 using System.Linq;
