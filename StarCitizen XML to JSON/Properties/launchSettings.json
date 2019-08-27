@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "StarCitizen XML to JSON": {
-      "commandName": "Project",
-      "commandLineArgs": "\".\\Data.debug\" \".\\Output\" -w"
-    }
-  }
-}
