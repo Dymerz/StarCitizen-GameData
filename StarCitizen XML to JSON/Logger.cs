@@ -15,9 +15,15 @@ namespace StarCitizen_XML_to_JSON
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="end"></param>
-		public static void Log(string message, string end = "\n", string start = "")
+		public static void Log(string message, string end = "\n", string start = "", bool clear_line = false)
 		{
-			string line = $"{start}[+] {message}{end}";
+			string line = $"{start}[+] {message}";
+
+			if (clear_line)
+				line += new String(' ', Console.WindowWidth - (line.Length + Console.CursorLeft)) + end;
+			else
+				line += end;
+
 			Console.Write(line);
 			sb.Append(DateTime.Now.ToString($"[{date_format}] ") + $"[+] {message}\n");
 		 }
@@ -26,9 +32,15 @@ namespace StarCitizen_XML_to_JSON
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="end"></param>
-		public static void LogInfo(string message, string end = "\n", string start = "")
+		public static void LogInfo(string message, string end = "\n", string start = "", bool clear_line = false)
 		{
-			string line = $"{start}[*] {message}{end}";
+			string line = $"{start}[*] {message}";
+
+			if (clear_line)
+				line += new String(' ', Console.WindowWidth - (line.Length + Console.CursorLeft)) + end;
+			else
+				line += end;
+
 			Console.Write(line);
 			sb.Append(DateTime.Now.ToString($"[{date_format}] ") + $"[*] {message}\n");
 		}
@@ -38,9 +50,15 @@ namespace StarCitizen_XML_to_JSON
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="end"></param>
-		public static void LogError(string message, Exception exception = null, string end = "\n", string start = "")
+		public static void LogError(string message, Exception exception = null, string end = "\n", string start = "", bool clear_line = false)
 		{
-			string line = $"{start}[-] {message}{end}";
+			string line = $"{start}[-] {message}";
+
+			if (clear_line)
+				line += new String(' ', Console.WindowWidth - (line.Length + Console.CursorLeft)) + end;
+			else
+				line += end;
+
 			Console.Write(line);
 			sb.Append(DateTime.Now.ToString($"[{date_format}] ") + $"[-] {message}\n");
 
@@ -56,9 +74,15 @@ namespace StarCitizen_XML_to_JSON
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="end"></param>
-		public static void LogWarning(string message, string end = "\n", string start = "")
+		public static void LogWarning(string message, string end = "\n", string start = "", bool clear_line = false)
 		{
-			string line = $"{start}[!] {message}{end}";
+			string line = $"{start}[!] {message}";
+
+			if (clear_line)
+				line += new String(' ', Console.WindowWidth - (line.Length + Console.CursorLeft)) + end;
+			else
+				line += end;
+
 			Console.Write(line);
 			sb.Append(DateTime.Now.ToString($"[{date_format}] ") + $"[!] {message}\n");
 		}
@@ -68,9 +92,15 @@ namespace StarCitizen_XML_to_JSON
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="end"></param>
-		public static void LogDebug(string message, string end = "\n", string start = "")
+		public static void LogDebug(string message, string end = "\n", string start = "", bool clear_line = false)
 		{
-			string line = $"{start}[D] {message}{end}";
+			string line = $"{start}[D] {message}";
+
+			if (clear_line)
+				line += new String(' ', Console.WindowWidth - (line.Length + Console.CursorLeft)) + end;
+			else
+				line += end;
+
 			sb.Append(DateTime.Now.ToString($"[{date_format}] ") + $"[D] {message}\n");
 #if RELEASE
 			if (!Program.debug)
@@ -84,9 +114,15 @@ namespace StarCitizen_XML_to_JSON
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="end"></param>
-		public static void LogEmpty(string message = "", string end = "\n", string start = "")
+		public static void LogEmpty(string message = "", string end = "\n", string start = "", bool clear_line = false)
 		{
-			string line = $"{start}{message}{end}";
+			string line = $"{start}{message}";
+
+			if (clear_line)
+				line += new String(' ', Console.WindowWidth - (line.Length + Console.CursorLeft)) + end;
+			else
+				line += end;
+
 			Console.Write(line);
 		}
 
