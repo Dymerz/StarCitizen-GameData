@@ -37,6 +37,7 @@ namespace StarCitizen_XML_to_JSON
 				Logger.LogEmpty("\t\t\tdefault: no.");
 				Logger.LogEmpty("\t--cache\t\tuse a local cache to speed up the process.");
 				Logger.LogEmpty("\t\t\tdefault: do not use the cache.");
+				Logger.LogEmpty("\t--rebuild\t\trebuild the cache.");
 				Logger.LogEmpty("\t--help, -h\tprint this message.");
 				Logger.LogEmpty();
 				Logger.LogEmpty("[Filters]");
@@ -53,23 +54,32 @@ namespace StarCitizen_XML_to_JSON
 
 			string working_dir = Environment.CurrentDirectory;
 
-			string source = new DirectoryInfo(args[0]).FullName + "\\";
-			string destination = new DirectoryInfo((args.Length >= 2) ? args[1] : ".").FullName + "\\";
+			args[0] = args[0].Trim(new char[] { '\'', '\"' });
+			args[1] = args[1].Trim(new char[] { '\'', '\"' });
+
+			string source = new DirectoryInfo(args[0]).FullName;
+			var destination = new DirectoryInfo((Directory.Exists(args[1])) ? args[1] : "./Tes").FullName;
 			SCType filters = FindParameters(args);
 
 			Logger.LogEmpty("Process has started.");
 			Logger.LogDebug("DEBUG MODE ENABLED");
 			Logger.LogDebug("Arguments: " + String.Join(' ', args));
-
+			Logger.LogEmpty();
 			Logger.LogEmpty("Parameters:");
 			Logger.LogEmpty($"\tSource:\t\t{source}");
 			Logger.LogEmpty($"\tDestination:\t{destination}");
-			Logger.LogEmpty($"Filter:");
-			Logger.LogEmpty("\tShips: " + ((filters & SCType.Ship) == SCType.None ? "No" : "Yes"));
-			Logger.LogEmpty("\tWeapons: " + ((filters & SCType.Weapon) == SCType.None ? "No" : "Yes"));
-			Logger.LogEmpty("\tStations: " + ((filters & SCType.None) == SCType.None ? "No" : "Yes"));
-			Logger.LogEmpty("\tCommodities: " + ((filters & SCType.Commoditie) == SCType.None ? "No" : "Yes"));
+
+			if (debug)
+			{
+				Logger.LogEmpty($"Filter:");
+				Logger.LogEmpty("\tShips: " + ((filters & SCType.Ship) == SCType.None ? "No" : "Yes"));
+				Logger.LogEmpty("\tWeapons: " + ((filters & SCType.Weapon) == SCType.None ? "No" : "Yes"));
+				Logger.LogEmpty("\tStations: " + ((filters & SCType.None) == SCType.None ? "No" : "Yes"));
+				Logger.LogEmpty("\tCommodities: " + ((filters & SCType.Commoditie) == SCType.None ? "No" : "Yes"));
+				Logger.LogEmpty("\tManufacturers: " + ((filters & SCType.Manufacturer) == SCType.None ? "No" : "Yes"));
+			}
 			Logger.LogEmpty();
+
 
 			if (filters == SCType.None)
 			{
@@ -80,6 +90,10 @@ namespace StarCitizen_XML_to_JSON
 
 			Logger.Log("Loading directory.. ", end: "");
 			Tuple<string, SCType>[] files = null;
+
+#if DEBUG
+			files = (Tuple<string, SCType>[])Progress.Process(() => GetFiles(source, filters), "Done");
+#else
 			try
 			{
 				files = (Tuple<string, SCType>[])Progress.Process(() => GetFiles(source, filters), "Done");
@@ -89,9 +103,14 @@ namespace StarCitizen_XML_to_JSON
 				Logger.LogError("Loading directory.. FAILED", ex, start: "\r");
 				Exit(true, saveCache: false);
 			}
+#endif
 
 			Logger.Log("Preparing resources.. ", end: "");
 			CryXML cryXml = null;
+
+#if DEBUG
+			cryXml = (CryXML)Progress.Process(() => new CryXML(source, destination), "Done");
+#else
 			try
 			{
 				cryXml = (CryXML)Progress.Process(() => new CryXML(source, destination), "Done");
@@ -101,6 +120,7 @@ namespace StarCitizen_XML_to_JSON
 				Logger.LogError("Preparing resources.. FAILED", ex, start: "\r");
 				Exit(true, saveCache: false);
 			}
+#endif
 
 			if (useCache)
 			{
@@ -142,12 +162,12 @@ namespace StarCitizen_XML_to_JSON
 				Logger.Log($"Converting {f.Name}..  ", end: "");
 
 				// catch exception on Release build
-#if RELEASE
+#if DEBUG
+				Progress.Process(() => cryXml.ConvertJSON(f, file.Item2), "Done");
+#else
 				try
 				{
-#endif
 					Progress.Process(() => cryXml.ConvertJSON(f, file.Item2), "Done");
-#if RELEASE
 				}
 				catch (Exception ex)
 				{
@@ -230,6 +250,9 @@ namespace StarCitizen_XML_to_JSON
 				{
 					case "--cache":
 						useCache = true;
+						break;
+					case "--rebuild":
+						CryXML.game.DeleteCache();
 						break;
 
 					case "--debug":
