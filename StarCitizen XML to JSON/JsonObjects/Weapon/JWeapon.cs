@@ -96,8 +96,8 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Weapon
 				return null;
 
 			var uuid = root.
-				SelectSingleNode("./Components/SAmmoContainerComponentParams").
-				Attributes["ammoParamsRecord"]?.Value;
+				SelectSingleNode("./Components/SammoContainerComponentParams")?
+				.Attributes["ammoParamsRecord"]?.Value;
 
 			if (uuid == null)
 				return null;
