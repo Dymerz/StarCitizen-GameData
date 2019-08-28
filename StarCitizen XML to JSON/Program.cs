@@ -256,6 +256,11 @@ namespace StarCitizen_XML_to_JSON
 					case "-c":
 						parameters |= SCType.Commoditie;
 						break;
+
+					case "--manufacturer":
+					case "-m":
+						parameters |= SCType.Manufacturer;
+						break;
 				}
 			}
 

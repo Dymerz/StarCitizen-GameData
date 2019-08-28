@@ -5,6 +5,7 @@ using StarCitizen_XML_to_JSON.JsonObjects;
 using StarCitizen_XML_to_JSON.JsonObjects.JCommodity;
 using StarCitizen_XML_to_JSON.JsonObjects.Ship;
 using StarCitizen_XML_to_JSON.JsonObjects.Weapon;
+using StarCitizen_XML_to_JSON.JsonObjects.Manufacturer;
 
 namespace StarCitizen_XML_to_JSON.Cry
 {
@@ -58,6 +59,7 @@ namespace StarCitizen_XML_to_JSON.Cry
 				case SCType.Shop:
 					break;
 				case SCType.Manufacturer:
+					jObject = new JManufacturer(doc, file, destination, source);
 					break;
 				case SCType.Starmap:
 					break;
@@ -101,6 +103,9 @@ namespace StarCitizen_XML_to_JSON.Cry
 
 			if (new FileInfo(xfile.BaseURI).Directory.FullName.ToLower().Contains("commodities"))
 				return SCType.Commoditie;
+
+			if (new FileInfo(xfile.BaseURI).Directory.FullName.ToLower().Contains("scitemmanufacturer"))
+				return SCType.Manufacturer;
 
 			return SCType.None;
 		}
