@@ -26,15 +26,28 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.JCommodity
 			var type = LoadType(root);
 			if (type != null)
 			{
-				var type_imported = doc.ImportNode(type, true);
-				doc.SelectSingleNode("*/Components/CommodityComponentParams").AppendChild(type_imported);
+				var imported = doc.ImportNode(type, true);
+				doc.SelectSingleNode("*/Components/CommodityComponentParams").AppendChild(imported);
 			}
 
 			var subtype = LoadSubtype(root);
 			if (subtype != null)
 			{ 
-				var subtype_imported = doc.ImportNode(subtype, true);
-				doc.SelectSingleNode("*/Components/CommodityComponentParams").AppendChild(subtype_imported);
+				var imported = doc.ImportNode(subtype, true);
+				doc.SelectSingleNode("*/Components/CommodityComponentParams").AppendChild(imported);
+			}
+
+			var product_price = LoadProductPrice(root);
+			if (product_price != null)
+			{
+				var imported = doc.ImportNode(product_price, true); // import the node
+
+				// create new node and append product_price to it
+				var retail = doc.CreateElement("RetailProducts");
+				retail.AppendChild(imported);
+
+				// add retail to the doc
+				doc.SelectSingleNode("/*").AppendChild(retail);
 			}
 
 			base.WriteFile(doc, name); // write the main ship
@@ -50,7 +63,7 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.JCommodity
 			{
 				string uuid = node.Attributes["value"]?.Value ?? null;
 				if (uuid != null)
-					tags.Add(CryXML.game.FindRef(uuid)?.Attributes["tagName"]?.Value);
+					tags.Add(CryXML.game.FindGameRef(uuid)?.Attributes["tagName"]?.Value);
 			}
 
 			return tags.ToArray();
@@ -59,13 +72,19 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.JCommodity
 		private XmlNode LoadType(XmlNode root)
 		{
 			var uuid = root.SelectSingleNode("./Components/CommodityComponentParams").Attributes["type"].Value;
-			return CryXML.game.FindRef(uuid);
+			return CryXML.game.FindGameRef(uuid);
 		}
 
 		private XmlNode LoadSubtype(XmlNode root)
 		{
 			var uuid = root.SelectSingleNode("./Components/CommodityComponentParams").Attributes["subtype"].Value;
-			return CryXML.game.FindRef(uuid);
+			return CryXML.game.FindGameRef(uuid);
+		}
+
+		private XmlNode LoadProductPrice(XmlNode root)
+		{
+			var uuid = root.Attributes["__ref"].Value;
+			return CryXML.game.FindPriceRef(uuid);
 		}
 	}
 }
