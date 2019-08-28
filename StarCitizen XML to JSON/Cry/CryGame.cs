@@ -9,47 +9,54 @@ namespace StarCitizen_XML_to_JSON.Cry
 {
 	public class CryGame
 	{
-		private string filename = "Game.xml";
-		private string cache_filename = "Game.cache";
+		private string game_filename = "Game.xml";
+		private string product_prices_filename = @".\Libs\Subsumption\Shops\RetailProductPrices.xml";
 
-		private XmlDocument doc;
+		private string cache_filename = "Data.cache";
+
+		private XmlDocument docGame;
+		private XmlDocument docProductPrices;
 		private List<CryCacheData> cache = new List<CryCacheData>();
 
 		public CryGame(string path)
 		{
-			doc = new XmlDocument();
-			doc.Load(Path.Combine(path, filename));
+			docProductPrices = new XmlDocument();
+			docProductPrices.Load(Path.Combine(path, product_prices_filename));
+
+			docGame = new XmlDocument();
+			docGame.Load(Path.Combine(path, game_filename));
+
 		}
 
-		public XmlNode FindRef(string uuid)
+		public XmlNode FindGameRef(string uuid)
 		{
 			if (uuid == "00000000-0000-0000-0000-000000000000")
 				return null;
 
 			// Search in Cache
-			var res = GetCache(uuid);
+			var res = GetCache("game_" + uuid);
 			if (res != null)
 				return res;
 
 			// Search in Game.xml
-			res = doc.SelectSingleNode($"//*[@__ref=\"{uuid}\"]");
-			AddCache(uuid, res);
+			res = docGame.SelectSingleNode($"//*[@__ref=\"{uuid}\"]");
+			AddCache("game_" + uuid, res);
 			return res;
 		}
 
-		public XmlNode[] FindRefs(string uuid)
+		public XmlNode[] FindGameRefs(string uuid)
 		{
 			if (uuid == "00000000-0000-0000-0000-000000000000")
 				return null;
 			
 			// Search in Cache
-			XmlNode[] res = GetMultipleCache(uuid);
+			XmlNode[] res = GetMultipleCache("game_" + uuid);
 			if (res != null)
 				return res;
 
 			// Search in Game.xml
-			var nodes = doc.SelectNodes($"//*[@__ref=\"{uuid}\"]");
-			AddMultipleCache(uuid, nodes);
+			var nodes = docGame.SelectNodes($"//*[@__ref=\"{uuid}\"]");
+			AddMultipleCache("game_"+uuid, nodes);
 			if (nodes == null)
 				return null;
 
@@ -59,6 +66,23 @@ namespace StarCitizen_XML_to_JSON.Cry
 				array_nodes.Add(n);
 			return array_nodes.ToArray();
 		}
+
+		public XmlNode FindPriceRef(string uuid)
+		{
+			if (uuid == "00000000-0000-0000-0000-000000000000")
+				return null;
+
+			// Search in Cache
+			var res = GetCache("product_price_" + uuid);
+			if (res != null)
+				return res;
+
+			// Search in RetailProductPrices.xml
+			res = docProductPrices.SelectSingleNode($"//*[@ID=\"{uuid}\"]");
+			AddCache("product_price_" + uuid, res);
+			return res;
+		}
+
 
 		public bool LoadCache()
 		{

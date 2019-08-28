@@ -51,7 +51,7 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Weapon
 			{
 				string uuid = node.Attributes["value"]?.Value ?? null;
 				if(uuid != null)
-					tags.Add(CryXML.game.FindRef(uuid)?.Attributes["tagName"]?.Value);
+					tags.Add(CryXML.game.FindGameRef(uuid)?.Attributes["tagName"]?.Value);
 			}
 
 			return tags.ToArray();
@@ -67,7 +67,7 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Weapon
 				.Attributes["ammoContainerRecord"]?
 				.Value;
 
-			var ammoPath = CryXML.game.FindRef(uuid)?.Attributes["__path"].Value;
+			var ammoPath = CryXML.game.FindGameRef(uuid)?.Attributes["__path"].Value;
 
 			if(ammoPath == null)
 				return null;
@@ -87,7 +87,7 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Weapon
 				.Attributes["Manufacturer"]?
 				.Value;
 
-			return CryXML.game.FindRef(uuid);
+			return CryXML.game.FindGameRef(uuid);
 		}
 
 		internal XmlNode LoadAmmoParams(XmlNode root)
@@ -101,7 +101,7 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Weapon
 
 			if (uuid == null)
 				return null;
-			return CryXML.game.FindRef(uuid);
+			return CryXML.game.FindGameRef(uuid);
 		}
 	}
 }
