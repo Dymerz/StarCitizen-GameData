@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Xml;
 
 namespace StarCitizen_XML_to_JSON.Cry
@@ -19,18 +20,20 @@ namespace StarCitizen_XML_to_JSON.Cry
 		// Deserialize
 		public CryCacheData(SerializationInfo info, StreamingContext context)
 		{
-			uuid = (string)info.GetValue("uuid", typeof(string));
+			string encoded_uuid = (string)info.GetValue("uuid", typeof(string));
+			uuid = Encoding.UTF8.GetString(Convert.FromBase64String(encoded_uuid));
 
 			XmlDocument doc = new XmlDocument();
-			doc.LoadXml((string)info.GetValue("node", typeof(string)));
+			string encoded_xml = (string)info.GetValue("node", typeof(string));
+			doc.LoadXml(Encoding.UTF8.GetString(Convert.FromBase64String(encoded_xml)));
 			node = doc.SelectSingleNode("/*");
 		}
 
 		// Serialize
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			info.AddValue("uuid", uuid);
-			info.AddValue("node", node.OuterXml);
+			info.AddValue("uuid", Convert.ToBase64String(Encoding.UTF8.GetBytes(uuid)));
+			info.AddValue("node", Convert.ToBase64String(Encoding.UTF8.GetBytes(node.OuterXml)));
 		}
 	}
 }
