@@ -42,6 +42,7 @@ namespace StarCitizen_XML_to_JSON
 				Logger.LogEmpty("[Filters]");
 				Logger.LogEmpty("\t--ships, -s\t\tConvert Ships.");
 				Logger.LogEmpty("\t--weapons, -w\t\tConvert Weapons.");
+				Logger.LogEmpty("\t--weapons-magazine, -wm\tConvert Weapons Magazines.");
 				Logger.LogEmpty("\t--commodities, -c\tConvert Commodities.");
 				Logger.LogEmpty("\t--tags, -t\t\tConvert Tags.");
 				Logger.LogEmpty("\t--shops, -S\t\tConvert Shops.");
@@ -244,6 +245,11 @@ namespace StarCitizen_XML_to_JSON
 					case "--weapons":
 					case "-w":
 						parameters |= SCType.Weapon;
+						break;
+
+					case "--weapons-magazine":
+					case "-wm":
+						parameters |= SCType.Weapon_Magazine;
 						break;
 
 					case "--commodities":

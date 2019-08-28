@@ -57,19 +57,6 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Weapon
 			return tags.ToArray();
 		}
 
-		private XmlNode LoadManufacturer(XmlNode root)
-		{
-			if (root == null)
-				return null;
-
-			var uuid = root
-				.SelectSingleNode("./Components/SAttachableComponentParams/AttachDef")?
-				.Attributes["Manufacturer"]?
-				.Value;
-
-			return CryXML.game.FindRef(uuid);
-		}
-
 		private XmlDocument LoadMagazine(XmlNode root)
 		{
 			if (root == null)
@@ -89,13 +76,27 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Weapon
 			magazine.Load(Path.Combine(base.source, ammoPath));
 			return magazine;
 		}
-		private XmlNode LoadAmmoParams(XmlNode root)
+
+		internal XmlNode LoadManufacturer(XmlNode root)
+		{
+			if (root == null)
+				return null;
+
+			var uuid = root
+				.SelectSingleNode("./Components/SAttachableComponentParams/AttachDef")?
+				.Attributes["Manufacturer"]?
+				.Value;
+
+			return CryXML.game.FindRef(uuid);
+		}
+
+		internal XmlNode LoadAmmoParams(XmlNode root)
 		{
 			if (root == null)
 				return null;
 
 			var uuid = root.
-				SelectSingleNode("*/Components/SAmmoContainerComponentParams").
+				SelectSingleNode("./Components/SAmmoContainerComponentParams").
 				Attributes["ammoParamsRecord"]?.Value;
 
 			if (uuid == null)

@@ -9,11 +9,12 @@ namespace StarCitizen_XML_to_JSON
 		None			= 0,		// 0
 		Ship			= 1 << 1,	// 1
 		Weapon			= 1 << 2,	// 2
-		Commoditie		= 1 << 3,	// 4
-		Tag				= 1 << 4,	// 8
-		Shop			= 1 << 5,	// 16
-		Manufacturer	= 1 << 6,	// 32
-		Starmap			= 1 << 7,	// 64
+		Weapon_Magazine	= 1 << 3,   // 4
+		Commoditie		= 1 << 4,	// 8
+		Tag				= 1 << 5,	// 16
+		Shop			= 1 << 6,	// 32
+		Manufacturer	= 1 << 7,	// 64
+		Starmap			= 1 << 8,	// 128
 
 		Every			= (Starmap * 2) - 1,
 	}
