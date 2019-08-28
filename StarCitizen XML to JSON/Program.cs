@@ -22,25 +22,6 @@ namespace StarCitizen_XML_to_JSON
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 			bool hasException = false;
 
-
-			//List<string> t = new List<string>()
-			//{
-			//	"AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA", "AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA",
-			//	"AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA", "AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA",
-			//	"AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA", "AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA",
-			//	"AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA", "AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA",
-			//	"AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA", "AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA",
-			//	"AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA", "AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA",
-			//	"AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA", "AAAAAAAAAAAAA", "AAAAAAAAAAAAA",  "AAAAAAAAAAAAA",
-			//	"AAAAAAAAAAAAA", "7867687676",  "hhhhhh", "AAAAAAAAAAAAA", "qzqzdzqzd",  "BBBBB",
-			//};
-			//foreach (string a in new ProgressBar(t, "DEBUG", true))
-			//{
-			//	Logger.Log(a);
-			//	System.Threading.Thread.Sleep(50);
-			//}
-			//Exit(false, false);
-
 			if (args.Length < 1 || args.Contains("-h") || args.Contains("--help"))
 			{
 				Logger.LogEmpty("Usage: dotnet StarCitizen_XML_to_JSON.dll [source] <destination> [CONFIG] [FILTER(S)]");
