@@ -24,31 +24,7 @@ namespace StarCitizen_XML_to_JSON
 
 			if (args.Length < 1 || args.Contains("-h") || args.Contains("--help"))
 			{
-				Logger.LogEmpty("Usage: dotnet StarCitizen_XML_to_JSON.dll [source] <destination> [CONFIG] [FILTER(S)]");
-				Logger.LogEmpty("Convert any StarCitizen XML files to JSON");
-				Logger.LogEmpty();
-				Logger.LogEmpty("[Required]");
-				Logger.LogEmpty("\tsource: \tthe folder to extract XML data.");
-				Logger.LogEmpty();
-				Logger.LogEmpty("[Config]");
-				Logger.LogEmpty("\tdestination\twrite all JSON in the destination, respecting source hierarchy.");
-				Logger.LogEmpty("\t\t\tdefault: current working directory.");
-				Logger.LogEmpty("\t--debug\t\tprint all Debug infos.");
-				Logger.LogEmpty("\t\t\tdefault: no.");
-				Logger.LogEmpty("\t--cache\t\tuse a local cache to speed up the process.");
-				Logger.LogEmpty("\t\t\tdefault: do not use the cache.");
-				Logger.LogEmpty("\t--rebuild\t\trebuild the cache.");
-				Logger.LogEmpty("\t--help, -h\tprint this message.");
-				Logger.LogEmpty();
-				Logger.LogEmpty("[Filters]");
-				Logger.LogEmpty("\t--ships, -s\t\tConvert Ships.");
-				Logger.LogEmpty("\t--weapons, -w\t\tConvert Weapons.");
-				Logger.LogEmpty("\t--weapons-magazine, -wm\tConvert Weapons Magazines.");
-				Logger.LogEmpty("\t--commodities, -c\tConvert Commodities.");
-				Logger.LogEmpty("\t--tags, -t\t\tConvert Tags.");
-				Logger.LogEmpty("\t--shops, -S\t\tConvert Shops.");
-				Logger.LogEmpty("\t--manufacturers, -m\tConvert Manufacturers.");
-				Logger.LogEmpty("\t--starmap, -sh\t\tConvert Starmap.");
+				PrintHelp();
 				return;
 			}
 
@@ -58,8 +34,8 @@ namespace StarCitizen_XML_to_JSON
 			args[1] = args[1].Trim(new char[] { '\'', '\"' });
 
 			string source = new DirectoryInfo(args[0]).FullName;
-			var destination = new DirectoryInfo((Directory.Exists(args[1])) ? args[1] : "./Tes").FullName;
-			SCType filters = FindParameters(args);
+			var destination = new DirectoryInfo((Directory.Exists(args[1])) ? args[1] : "./").FullName;
+			SCType filters = FindParameters(args.Skip(destination == "./" ? 1 : 2).ToArray()); // skip source and destination from args
 
 			Logger.LogEmpty("Process has started.");
 			Logger.LogDebug("DEBUG MODE ENABLED");
@@ -180,6 +156,36 @@ namespace StarCitizen_XML_to_JSON
 			Exit(hasException);
 		}
 
+
+		private static void PrintHelp()
+		{
+			Logger.LogEmpty("Usage: dotnet StarCitizen_XML_to_JSON.dll [source] <destination> [CONFIG] [FILTER(S)]");
+			Logger.LogEmpty("Convert any StarCitizen XML files to JSON");
+			Logger.LogEmpty();
+			Logger.LogEmpty("[Required]");
+			Logger.LogEmpty("\tsource: \tthe folder to extract XML data.");
+			Logger.LogEmpty();
+			Logger.LogEmpty("[Config]");
+			Logger.LogEmpty("\tdestination\twrite all JSON in the destination, respecting source hierarchy.");
+			Logger.LogEmpty("\t\t\tdefault: current working directory.");
+			Logger.LogEmpty("\t--debug\t\tprint all Debug infos.");
+			Logger.LogEmpty("\t\t\tdefault: no.");
+			Logger.LogEmpty("\t--cache\t\tuse a local cache to speed up the process.");
+			Logger.LogEmpty("\t\t\tdefault: do not use the cache.");
+			Logger.LogEmpty("\t--rebuild\t\trebuild the cache.");
+			Logger.LogEmpty("\t--help, -h\tprint this message.");
+			Logger.LogEmpty();
+			Logger.LogEmpty("[Filters]");
+			Logger.LogEmpty("\t--ships, -s\t\tConvert Ships.");
+			Logger.LogEmpty("\t--weapons, -w\t\tConvert Weapons.");
+			Logger.LogEmpty("\t--weapons-magazine, -wm\tConvert Weapons Magazines.");
+			Logger.LogEmpty("\t--commodities, -c\tConvert Commodities.");
+			Logger.LogEmpty("\t--tags, -t\t\tConvert Tags.");
+			Logger.LogEmpty("\t--shops, -S\t\tConvert Shops.");
+			Logger.LogEmpty("\t--manufacturers, -m\tConvert Manufacturers.");
+			Logger.LogEmpty("\t--starmap, -sh\t\tConvert Starmap.");
+		}
+
 		/// <summary>
 		/// Exit the application
 		/// </summary>
@@ -283,6 +289,12 @@ namespace StarCitizen_XML_to_JSON
 					case "--manufacturer":
 					case "-m":
 						parameters |= SCType.Manufacturer;
+						break;
+
+					default:
+						Logger.LogWarning("Unknown parameter: " + arg);
+						Logger.LogInfo("Type '--help' for help.");
+						Logger.LogEmpty();
 						break;
 				}
 			}
