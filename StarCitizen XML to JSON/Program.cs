@@ -49,6 +49,7 @@ namespace StarCitizen_XML_to_JSON
 			{
 				Logger.LogEmpty($"Filter:");
 				Logger.LogEmpty("\tShips: " + ((filters & SCType.Ship) == SCType.None ? "No" : "Yes"));
+				Logger.LogEmpty("\tShops: " + ((filters & SCType.Shop) == SCType.None ? "No" : "Yes"));
 				Logger.LogEmpty("\tWeapons: " + ((filters & SCType.Weapon) == SCType.None ? "No" : "Yes"));
 				Logger.LogEmpty("\tStations: " + ((filters & SCType.None) == SCType.None ? "No" : "Yes"));
 				Logger.LogEmpty("\tCommodities: " + ((filters & SCType.Commoditie) == SCType.None ? "No" : "Yes"));
@@ -176,6 +177,7 @@ namespace StarCitizen_XML_to_JSON
 			Logger.LogEmpty("\t--help, -h\tprint this message.");
 			Logger.LogEmpty();
 			Logger.LogEmpty("[Filters]");
+			Logger.LogEmpty("\t--all\t\t\tConvert every entities.");
 			Logger.LogEmpty("\t--ships, -s\t\tConvert Ships.");
 			Logger.LogEmpty("\t--weapons, -w\t\tConvert Weapons.");
 			Logger.LogEmpty("\t--weapons-magazine, -wm\tConvert Weapons Magazines.");
@@ -271,6 +273,11 @@ namespace StarCitizen_XML_to_JSON
 						parameters |= SCType.Ship;
 						break;
 
+					case "--shops":
+					case "-S":
+						parameters |= SCType.Shop;
+						break;
+
 					case "--weapons":
 					case "-w":
 						parameters |= SCType.Weapon;
@@ -289,6 +296,10 @@ namespace StarCitizen_XML_to_JSON
 					case "--manufacturer":
 					case "-m":
 						parameters |= SCType.Manufacturer;
+						break;
+
+					case "--all":
+						parameters = SCType.Every;
 						break;
 
 					default:
