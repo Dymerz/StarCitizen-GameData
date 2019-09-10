@@ -62,6 +62,8 @@ namespace StarCitizen_XML_to_JSON
 				if (auto_title)
 					title = en.Current.ToString();
 
+				yield return en.Current; // return the object to the foreach loop
+
 				// then clean the line with spaces
 				Console.Write('\r' + new String(' ', width - 1) + '\r');
 
@@ -71,7 +73,6 @@ namespace StarCitizen_XML_to_JSON
 				// Refresh the progress bar
 				Refresh();
 
-				yield return en.Current; // return the object to the foreach loop
 			}
 
 			if (clear_line)
