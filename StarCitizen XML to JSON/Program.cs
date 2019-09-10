@@ -1,10 +1,9 @@
-﻿using StarCitizen_XML_to_JSON.Cry;
+﻿using SharedProject;
+using StarCitizen_XML_to_JSON.Cry;
 using StarCitizen_XML_to_JSON.JsonObjects;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace StarCitizen_XML_to_JSON
 {
@@ -57,7 +56,6 @@ namespace StarCitizen_XML_to_JSON
 			}
 			Logger.LogEmpty();
 
-
 			if (filters == SCType.None)
 			{
 				Logger.LogInfo("No filter(s) entered,  try to add a least one filter.");
@@ -65,7 +63,7 @@ namespace StarCitizen_XML_to_JSON
 				return;
 			}
 
-			Logger.Log("Loading directory.. ", end: "");
+			Logger.Log("Loading directory (this can take some time).. ", end: "");
 			Tuple<string, SCType>[] files = null;
 
 #if DEBUG
@@ -313,6 +311,7 @@ namespace StarCitizen_XML_to_JSON
 #if DEBUG
 			debug = true;
 #endif
+			Logger.debug = debug;
 			return parameters;
 		}
     }

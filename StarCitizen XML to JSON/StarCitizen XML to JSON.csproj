@@ -19,4 +19,6 @@
 		<RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="true" />
   </ItemGroup>
 
+  <Import Project="..\SharedProject\SharedProject.projitems" Label="Shared" />
+
 </Project>

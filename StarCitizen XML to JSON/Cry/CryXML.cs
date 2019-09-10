@@ -7,6 +7,7 @@ using StarCitizen_XML_to_JSON.JsonObjects.Ship;
 using StarCitizen_XML_to_JSON.JsonObjects.Weapon;
 using StarCitizen_XML_to_JSON.JsonObjects.Manufacturer;
 using StarCitizen_XML_to_JSON.JsonObjects.JShop;
+using SharedProject;
 
 namespace StarCitizen_XML_to_JSON.Cry
 {

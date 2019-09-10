@@ -5,7 +5,14 @@ VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StarCitizen XML to JSON", "StarCitizen XML to JSON.csproj", "{D1AEB2E7-43A3-46FB-8AFB-5B819E558692}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarCitizen JSON to SQL", "..\StarCitizen JSON to SQL\StarCitizen JSON to SQL.csproj", "{AD19CB84-1CF4-4820-BBFF-0AE97B99CF21}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SharedProject", "..\SharedProject\SharedProject.shproj", "{BF30DDCE-73A3-4B79-9B14-3C8676587B1D}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\SharedProject\SharedProject.projitems*{bf30ddce-73a3-4b79-9b14-3c8676587b1d}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -15,6 +22,10 @@ Global
 		{D1AEB2E7-43A3-46FB-8AFB-5B819E558692}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1AEB2E7-43A3-46FB-8AFB-5B819E558692}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1AEB2E7-43A3-46FB-8AFB-5B819E558692}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD19CB84-1CF4-4820-BBFF-0AE97B99CF21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD19CB84-1CF4-4820-BBFF-0AE97B99CF21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD19CB84-1CF4-4820-BBFF-0AE97B99CF21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD19CB84-1CF4-4820-BBFF-0AE97B99CF21}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
