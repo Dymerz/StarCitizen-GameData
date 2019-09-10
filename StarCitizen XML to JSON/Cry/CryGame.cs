@@ -10,7 +10,7 @@ namespace StarCitizen_XML_to_JSON.Cry
 	public class CryGame
 	{
 		private string game_filename = "Game.xml";
-		private string product_prices_filename = @".\Libs\Subsumption\Shops\RetailProductPrices.xml";
+		private string product_prices_filename = @"./Libs/Subsumption/Shops/RetailProductPrices.xml";
 
 		private string cache_filename = "Data.cache";
 
