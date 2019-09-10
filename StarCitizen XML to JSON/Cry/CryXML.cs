@@ -6,6 +6,7 @@ using StarCitizen_XML_to_JSON.JsonObjects.JCommodity;
 using StarCitizen_XML_to_JSON.JsonObjects.Ship;
 using StarCitizen_XML_to_JSON.JsonObjects.Weapon;
 using StarCitizen_XML_to_JSON.JsonObjects.Manufacturer;
+using StarCitizen_XML_to_JSON.JsonObjects.JShop;
 
 namespace StarCitizen_XML_to_JSON.Cry
 {
@@ -45,6 +46,9 @@ namespace StarCitizen_XML_to_JSON.Cry
 				case SCType.Ship:
 					jObject = new JShip(doc, file, destination, source);
 					break;
+				case SCType.Shop:
+					jObject = new JShop(doc, file, destination, source);
+					break;
 				case SCType.Weapon:
 					jObject = new JWeapon(doc, file, destination, source);
 					break;
@@ -55,8 +59,6 @@ namespace StarCitizen_XML_to_JSON.Cry
 					jObject = new JCommodity(doc, file, destination, source);
 					break;
 				case SCType.Tag:
-					break;
-				case SCType.Shop:
 					break;
 				case SCType.Manufacturer:
 					jObject = new JManufacturer(doc, file, destination, source);
@@ -94,6 +96,9 @@ namespace StarCitizen_XML_to_JSON.Cry
 		{
 			if(xfile.SelectSingleNode("/*").Name.Equals("Vehicle"))
 				return SCType.Ship;
+
+			if (new FileInfo(xfile.BaseURI).Name.ToLower().Equals("shoplayouts.xml"))
+				return SCType.Shop;
 
 			if (new FileInfo(xfile.BaseURI).Directory.Name.ToLower() == "fps_weapons")
 				return SCType.Weapon;
