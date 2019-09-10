@@ -1,7 +1,7 @@
 @ECHO OFF
 
 echo Building Win x64
-dotnet publish -c Release --self-contained -r win-x64
+dotnet publish -c Release -r win-x64 --self-contained=true
 
-echo Building WinUbuntu 16.10 x64
-dotnet publish -c Release --self-contained -r ubuntu.16.10-x64 
+echo Building Linux x64
+wsl dotnet publish -c Release -r linux-x64 --self-contained=true 
