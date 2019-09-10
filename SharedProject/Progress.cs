@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StarCitizen_XML_to_JSON
+namespace SharedProject
 {
 	class Progress
 	{

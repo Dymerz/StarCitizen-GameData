@@ -2,13 +2,15 @@
 using System.IO;
 using System.Text;
 
-namespace StarCitizen_XML_to_JSON
+namespace SharedProject
 {
 	class Logger
 	{
 		private static StringBuilder sb = new StringBuilder();
 		private static string date_format = "yyy-MM-dd HH:mm:ss.fff";
 		public static string filename = DateTime.Now.ToString("dd-MM-yyyy") + "_log.txt";
+
+		public static bool debug = false;
 
 		/// <summary>
 		/// Print DEFAULT log
@@ -103,7 +105,7 @@ namespace StarCitizen_XML_to_JSON
 
 			sb.Append(DateTime.Now.ToString($"[{date_format}] ") + $"[D] {message}\n");
 #if RELEASE
-			if (!Program.debug)
+			if (!debug)
 				return;
 #endif
 			Console.Write(line);

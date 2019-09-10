@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace StarCitizen_XML_to_JSON
+namespace SharedProject
 {
 	class ProgressBar : IEnumerable
 	{
@@ -101,6 +101,9 @@ namespace StarCitizen_XML_to_JSON
 
 			int progress_space = (width - 2) - title_max - leading_space; // calculate the area of the progress
 			int val = (int)(progress_space * ((float)percent / 100)); // calculate the number of '#' to print
+
+			if (val <= 0)
+				return;
 
 			string progress = new String('#', val); // create the progress (###) string
 			string remaining = new String('.', progress_space - progress.Length); // create the empty progress string
