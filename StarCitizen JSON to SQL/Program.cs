@@ -9,6 +9,8 @@ namespace StarCitizen_JSON_to_SQL
 	class Program
 	{
 		public static bool debug { get; internal set; } = false;
+		public static bool minify { get; internal set; } = false;
+
 		public static DateTime starttime = DateTime.Now;
 		public static string assembly_directory = AppContext.BaseDirectory;
 
@@ -47,6 +49,7 @@ namespace StarCitizen_JSON_to_SQL
 			Logger.LogEmpty($"\tDestination:\t{destination}");
 			Logger.LogEmpty($"\tDatabase:\t{database_name}");
 			Logger.LogEmpty($"\tVersion:\t{version}");
+			Logger.LogEmpty($"\tMinify:\t\t{(minify ? "Yes" : "No")}");
 
 			if (debug)
 			{
@@ -132,6 +135,8 @@ namespace StarCitizen_JSON_to_SQL
 			Logger.LogEmpty("[Config]");
 			Logger.LogEmpty("\t--debug\t\tprint all Debug infos.");
 			Logger.LogEmpty("\t\t\tdefault: no.");
+			Logger.LogEmpty("\t--minify\t\tconvert JSON in a minified format.");
+			Logger.LogEmpty("\t\t\tdefault: no.");
 			Logger.LogEmpty("\t--help, -h\tprint this message.");
 			Logger.LogEmpty();
 			Logger.LogEmpty("[Filters]");
@@ -205,6 +210,9 @@ namespace StarCitizen_JSON_to_SQL
 				{
 					case "--debug":
 						debug = true;
+						break;
+					case "--minify":
+						minify = true;
 						break;
 
 
