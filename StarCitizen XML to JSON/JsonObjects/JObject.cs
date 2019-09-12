@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SharedProject;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,7 +21,6 @@ namespace StarCitizen_XML_to_JSON.JsonObjects
 
 		abstract internal string directory_name { get;}
 
-	
 		protected JObject(XmlDocument doc, FileInfo file, string destination, string source)
 		{
 			this.doc = doc ?? throw new ArgumentNullException(nameof(doc));
@@ -63,7 +63,7 @@ namespace StarCitizen_XML_to_JSON.JsonObjects
 
 			var filename = Path.Combine(
 					destination, directory_name, name.Replace(" ", "_") + ".json");
-
+			
 			using (StreamWriter writer = new StreamWriter(filename))
 			{
 				// serealize XML to JSON
@@ -78,8 +78,14 @@ namespace StarCitizen_XML_to_JSON.JsonObjects
 				// add leading 0 on decaml ".x"
 				plain_json = Regex.Replace(plain_json, "([\"\'])(\\.[0-9]+)([\"\'])", "0$2");
 
+				// add leading 0 on decaml "x."
+				plain_json = Regex.Replace(plain_json, "([\"\'])([0-9]+\\.)([\"\'])", m => m.Value + '0');
+
 				// remove '"' to numbers (int, float, double,..)
 				plain_json = Regex.Replace(plain_json, "([\"\'])([0-9]*[(\\.[0-9]+]?)([\"\'])", "$2");
+
+				// escape  '\'
+				plain_json = Regex.Replace(plain_json, @"\\", "\\\\");
 
 				writer.Write(plain_json);
 			}
