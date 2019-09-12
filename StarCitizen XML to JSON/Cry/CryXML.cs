@@ -56,7 +56,7 @@ namespace StarCitizen_XML_to_JSON.Cry
 				case SCType.Weapon_Magazine:
 					jObject = new JWeaponMagazine(doc, file, destination, source);
 					break;
-				case SCType.Commoditie:
+				case SCType.Commodity:
 					jObject = new JCommodity(doc, file, destination, source);
 					break;
 				case SCType.Tag:
@@ -101,14 +101,14 @@ namespace StarCitizen_XML_to_JSON.Cry
 			if (new FileInfo(xfile.BaseURI).Name.ToLower().Equals("shoplayouts.xml"))
 				return SCType.Shop;
 
-			if (new FileInfo(xfile.BaseURI).Directory.Name.ToLower() == "fps_weapons")
+			if (new FileInfo(xfile.BaseURI).Directory.FullName.ToLower().Contains("weapons\\fps_weapons"))
 				return SCType.Weapon;
 
 			if (new FileInfo(xfile.BaseURI).Directory.Name.ToLower() == "magazines")
 				return SCType.Weapon_Magazine;
 
 			if (new FileInfo(xfile.BaseURI).Directory.FullName.ToLower().Contains("commodities"))
-				return SCType.Commoditie;
+				return SCType.Commodity;
 
 			if (new FileInfo(xfile.BaseURI).Directory.FullName.ToLower().Contains("scitemmanufacturer"))
 				return SCType.Manufacturer;
