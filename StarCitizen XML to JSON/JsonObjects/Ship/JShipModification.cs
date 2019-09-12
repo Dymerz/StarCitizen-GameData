@@ -66,16 +66,14 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Ship
 				}// if it's a modification file
 				else
 				{
-					var id = node.Attributes["id"].Value;	// get the id
-					var target = doc.SelectSingleNode($"//*[@id='{id}']");   // get the target of the id
-					var target_parent = target.ParentNode;
 
-					XmlNode xmlNode = doc.CreateNode(node.NodeType, node.Name, node.NamespaceURI);
-					XmlNode importedNode = doc.ImportNode(xmlNode, true);
-					//target.AppendChild(importedNode);
+					foreach (XmlNode child in node.SelectSingleNode("/").ChildNodes)
+					{
+						var id = node.Attributes["id"].Value;   // get the id
+						var target = doc.SelectSingleNode($"//*[@id='{id}']");   // get the target of the id
 
-					target.InnerXml = node.InnerXml;
-					//target.ParentNode.ReplaceChild(importedNode, target);
+						target = RecursiveReplace(target, node);
+					}
 				}
 			}
 
@@ -83,69 +81,41 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Ship
 			return doc;
 		}
 
-		/*
-		private XmlDocument RecursiveModification(XmlNode source, XmlDocument doc, XmlNode target = null)
+		private XmlNode RecursiveReplace(XmlNode source, XmlNode editions)
 		{
-			foreach (XmlAttribute a in source.Attributes)
+			foreach (XmlAttribute attr in editions.Attributes)
 			{
-				if (source.Attributes["id"] != null)
-				{
-					var id = source.Attributes["id"].Value;
-					target = doc.SelectSingleNode($"//*[@id='{id}']");
-				}
-				if (target.Attributes[a.Name] == null)
-				{
-					var n = doc.CreateAttribute(a.Name);
-					n.Value = a.Value;
-					target.Attributes.SetNamedItem(n);
-				}else
-					target.Attributes[a.Name].Value = a.Value;
-			}
-
-			if (source.HasChildNodes)
-			{
-				target = target.FirstChild;
-				foreach (XmlNode n in source.ChildNodes)
-				{
-					if (target != null)
-					{
-						target.Attributes.RemoveAll();
-						doc = RecursiveModification(n, doc, target);
-
-					}
-
-					if (target.NextSibling != null)
-						target = target.NextSibling;
-					else
-					{
-						XmlNode xmlNode = doc.CreateNode(n.NodeType, n.Name, n.NamespaceURI);
-						XmlNode importedNode = doc.ImportNode(xmlNode, true);
-						target.AppendChild(importedNode);
-					}
-				}
-			}
-
-			if (source.NextSibling != null)
-			{
-				source = source.NextSibling;
-				if (target.NextSibling != null)
-					doc = RecursiveModification(source, doc, target.NextSibling);
+				if (source.Attributes[attr.Name] != null)
+					source.Attributes[attr.Name].Value = attr.Value;
 				else
 				{
-					XmlNode xmlNode = doc.CreateNode(source.NodeType, source.Name, source.NamespaceURI);
-					XmlNode importedNode = doc.ImportNode(xmlNode, true);
-					target.AppendChild(importedNode);
-
-					if (source.NextSibling != null)
-					{
-						doc = RecursiveModification(source.NextSibling, doc, target.NextSibling);
-					}
+					var imported = source.OwnerDocument.CreateAttribute(attr.Prefix, attr.LocalName, attr.NamespaceURI);
+					imported.Value = attr.Value;
+					source.Attributes.Append(imported);
 				}
 			}
 
-			doc = target.OwnerDocument;
-			return doc;
+			if (editions.HasChildNodes)
+			{
+				var nextEdition = editions.FirstChild;
+				var nextSource = source.SelectSingleNode($"//{nextEdition.Name}");
+
+				if (nextSource != null)
+				{
+					var imported = source.OwnerDocument.ImportNode(nextEdition, true);
+					source.AppendChild(imported);
+				}
+				else
+					nextSource = RecursiveReplace(nextSource, nextEdition);
+			}
+
+			var next = editions.NextSibling;
+			if (next != null)
+			{
+				var nextSource = source.SelectSingleNode($"//{next.Name}");
+				nextSource = RecursiveReplace(nextSource, next);
+			}
+			return source;
 		}
-		*/
 	}
 }
