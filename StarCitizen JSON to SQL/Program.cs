@@ -58,7 +58,7 @@ namespace StarCitizen_JSON_to_SQL
 				Logger.LogEmpty("\tShops: " + ((filters & SCType.Shop) == SCType.None ? "No" : "Yes"));
 				Logger.LogEmpty("\tWeapons: " + ((filters & SCType.Weapon) == SCType.None ? "No" : "Yes"));
 				Logger.LogEmpty("\tStations: " + ((filters & SCType.None) == SCType.None ? "No" : "Yes"));
-				Logger.LogEmpty("\tCommodities: " + ((filters & SCType.Commoditie) == SCType.None ? "No" : "Yes"));
+				Logger.LogEmpty("\tCommodities: " + ((filters & SCType.Commodity) == SCType.None ? "No" : "Yes"));
 				Logger.LogEmpty("\tManufacturers: " + ((filters & SCType.Manufacturer) == SCType.None ? "No" : "Yes"));
 			}
 			Logger.LogEmpty();
@@ -238,7 +238,7 @@ namespace StarCitizen_JSON_to_SQL
 
 					case "--commodities":
 					case "-c":
-						parameters |= SCType.Commoditie;
+						parameters |= SCType.Commodity;
 						break;
 
 					case "--manufacturer":

@@ -72,7 +72,7 @@ namespace StarCitizen_JSON_to_SQL.Cry
 						label = label[0].ToString().ToUpper() + label.Substring(1);
 
 					writer.WriteLine(
-						String.Format(sql_format, database_name, index, (int)Enum.Parse(typeof(SCType), cat), cat, label));
+						String.Format(sql_format, database_name, index, (int)Enum.Parse(typeof(SCType), cat), cat.ToLower(), label));
 					index++;
 				}
 			}
@@ -94,7 +94,7 @@ namespace StarCitizen_JSON_to_SQL.Cry
 			switch (new FileInfo(file).Directory.Name.ToLower())
 			{
 				case "commodities":
-					return SCType.Commoditie;
+					return SCType.Commodity;
 				case "manufacturers":
 					return SCType.Manufacturer;
 				case "ships":
