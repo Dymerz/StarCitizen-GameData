@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace StarCitizen_JSON_to_SQL.Cry
 {
@@ -20,7 +21,7 @@ namespace StarCitizen_JSON_to_SQL.Cry
 			this.version = version ?? throw new ArgumentNullException(nameof(version));
 
 			if (!File.Exists(destination))
-				File.Create(destination);
+				File.Create(destination).Close();
 			else
 				File.WriteAllText(destination, "");
 
@@ -30,12 +31,16 @@ namespace StarCitizen_JSON_to_SQL.Cry
 
 		public void ConvertJSON(FileInfo f, SCType type)
 		{
-			string sql_format = "INSERT IGNORE INTO `{0}`.`gamedata`(`category`, `version`, `name`, `data`) VALUES ({1}, '{2}', '{3}', '{4}');";
+			string sql_format = "INSERT IGNORE INTO `{0}`.`gamedata`(`category_id`, `version`, `name`, `data`) VALUES ({1}, '{2}', '{3}', '{4}');";
 
 			string content = File.ReadAllText(f.FullName);
-			content = content.Replace("\r\n", "");
 
-			string name = f.Name.Replace(".json", "");
+			if (Program.minify)
+			{
+				content = Regex.Replace(content, "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", "$1");
+			}
+
+			string name = f.Name.Replace(".json", "").Replace("_", " ");
 
 			using (StreamWriter writer = new StreamWriter(destination, true))
 			{
