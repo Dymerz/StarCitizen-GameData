@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace StarCitizen_XML_to_JSON.JsonObjects.Ship
 {
@@ -23,8 +25,8 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Ship
 			if (modif != null) modif.ParentNode.RemoveChild(modif);
 
 
-			var name = (root.Attributes["displayname"] ?? root.Attributes["name"]).Value;
-			base.WriteFile(doc, name); // write the main ship
+			var root_name = (root.Attributes["displayname"] ?? root.Attributes["name"]).Value;
+			base.WriteFile(doc, root_name); // write the main ship
 
 			// write all models of the main ship
 			foreach (var m in models)
@@ -35,7 +37,10 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Ship
 
 				if (m.model != null)
 				{
-					name = (root.Attributes["displayname"] ?? root.Attributes["name"]).Value;
+					var name = (m.model.SelectSingleNode("/*").Attributes["displayname"] ?? m.model.SelectSingleNode("/*").Attributes["name"]).Value;
+
+					// TODO: some models erase an existing model
+					// Check with AEGS AEGS_Avenger (Titan)
 					base.WriteFile(m.model, name);
 				}	
 			}
