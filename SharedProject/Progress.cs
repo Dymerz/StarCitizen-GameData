@@ -63,7 +63,7 @@ namespace SharedProject
 		public void Stop()
 		{
 			run = false;
-			while (task.Status == TaskStatus.Running)
+			while (task.Status != TaskStatus.RanToCompletion)
 				Thread.Sleep(1);
 
 			task.Dispose();
