@@ -26,7 +26,6 @@ namespace StarCitizen_JSON_to_SQL.Cry
 				File.WriteAllText(destination, "");
 
 			ConvertCategory();
-			string tttttt = File.ReadAllText(destination);
 		}
 
 		public void ConvertJSON(FileInfo f, SCType type)
