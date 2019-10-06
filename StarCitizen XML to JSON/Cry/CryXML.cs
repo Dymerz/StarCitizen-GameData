@@ -104,7 +104,7 @@ namespace StarCitizen_XML_to_JSON.Cry
 			if (new FileInfo(xfile.BaseURI).Directory.FullName.ToLower().Contains("weapons\\fps_weapons"))
 				return SCType.Weapon;
 
-			if (new FileInfo(xfile.BaseURI).Directory.FullName.ToLower().EndsWith("fps_weapons\\magazines"))
+			if (new FileInfo(xfile.BaseURI).Directory.FullName.ToLower().EndsWith("scitem\\weapons\\magazines"))
 				return SCType.Weapon_Magazine;
 
 			if (new FileInfo(xfile.BaseURI).Directory.FullName.ToLower().Contains("entities\\commodities"))
