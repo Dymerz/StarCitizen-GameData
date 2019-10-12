@@ -59,6 +59,9 @@ namespace StarCitizen_JSON_to_SQL.Cry
 			{
 				foreach (var cat in categories)
 				{
+					if (cat == "None" || cat == "Every")
+						continue;
+
 					string label = cat.ToLower();
 					label = label.Replace("_", " ").Trim();
 					if (label.Contains(" "))
