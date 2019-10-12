@@ -38,7 +38,7 @@ namespace StarCitizen_JSON_to_SQL
 			string database_name = args[2];
 			string version = args[3];
 
-			SCType filters = FindParameters(args.Skip(destination == "./" ? 1 : 2).ToArray()); // skip source and destination from args
+			SCType filters = FindParameters(args.Skip(destination == "./" ? 3 : 4).ToArray()); // skip source and destination from args
 
 			Logger.LogEmpty("Process has started.");
 			Logger.LogDebug("DEBUG MODE ENABLED");
