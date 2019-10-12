@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>StarCitizen_JSON_to_SQL</RootNamespace>
+    <AssemblyName>StarCitizen_JSON_to_SQL</AssemblyName>
   </PropertyGroup>
 
   <Import Project="..\SharedProject\SharedProject.projitems" Label="Shared" />
