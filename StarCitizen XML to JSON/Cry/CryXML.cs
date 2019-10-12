@@ -59,13 +59,13 @@ namespace StarCitizen_XML_to_JSON.Cry
 				case SCType.Commodity:
 					jObject = new JCommodity(doc, file, destination, source);
 					break;
-				case SCType.Tag:
-					break;
+				//case SCType.Tag:
+				//	break;
 				case SCType.Manufacturer:
 					jObject = new JManufacturer(doc, file, destination, source);
 					break;
-				case SCType.Starmap:
-					break;
+				//case SCType.Starmap:
+				//	break;
 				case SCType.Every:
 					break;
 				case SCType.None:
