@@ -62,7 +62,7 @@ namespace StarCitizen_XML_to_JSON
 				Logger.LogInfo("Type '--help' for help.");
 				return;
 			}
-
+			
 			Logger.Log("Loading directory (this can take some time).. ", end: "");
 			Tuple<string, SCType>[] files = null;
 
@@ -119,6 +119,10 @@ namespace StarCitizen_XML_to_JSON
 				}
 			}
 
+			Logger.Log("Loading localization.. ", end: "");
+			Progress.Process(() => CryXML.localization.LoadLocalization(Language.ENGLISH), "Done");
+
+
 			Logger.LogInfo($"Files to be converted: {files.Length}");
 			Logger.LogEmpty();
 			Logger.LogInfo("Starting..");
@@ -172,6 +176,9 @@ namespace StarCitizen_XML_to_JSON
 			Logger.LogEmpty("\t--cache\t\tuse a local cache to speed up the process.");
 			Logger.LogEmpty("\t\t\tdefault: do not use the cache.");
 			Logger.LogEmpty("\t--rebuild\t\trebuild the cache.");
+			Logger.LogEmpty("\t--english, -h\tUse the english localization (Default).");
+			Logger.LogEmpty("\t--french, -h\tUse the french localization.");
+			Logger.LogEmpty("\t--german, -h\tUse the german localization.");
 			Logger.LogEmpty("\t--help, -h\tprint this message.");
 			Logger.LogEmpty();
 			Logger.LogEmpty("[Filters]");
@@ -223,7 +230,6 @@ namespace StarCitizen_XML_to_JSON
 		/// <returns></returns>
 		private static Tuple<string, SCType>[] GetFiles(string source, SCType filter)
 		{
-			try
 			{
 				return Directory.GetFiles(source, "*.xml", SearchOption.AllDirectories)
 					.Where(f =>
@@ -234,11 +240,6 @@ namespace StarCitizen_XML_to_JSON
 					.OrderBy(f => f.Item2)
 					.ToArray();
 			}
-			catch (Exception ex)
-			{
-				Logger.LogError(ex.Message);
-			}
-			return new Tuple<string, SCType>[0];
 		}
 
 		/// <summary>
@@ -294,6 +295,15 @@ namespace StarCitizen_XML_to_JSON
 					case "--manufacturer":
 					case "-m":
 						parameters |= SCType.Manufacturer;
+						break;
+
+					case "--english":
+						break;
+
+					case "--french":
+						break;
+
+					case "--german":
 						break;
 
 					case "--all":

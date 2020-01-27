@@ -17,6 +17,7 @@ namespace StarCitizen_XML_to_JSON.Cry
 	public class CryXML
 	{
 		public static CryGame game { get; internal set; } = null;
+		public static CryLocalization localization { get; internal set; } = null;
 
 		public string source{ get; internal set; } = null;
 		public string destination { get; internal set; } = null;
@@ -27,6 +28,7 @@ namespace StarCitizen_XML_to_JSON.Cry
 			this.destination = destination ?? throw new ArgumentNullException(nameof(destination));
 
 			game = new CryGame(source);
+			localization = new CryLocalization(source);
 			Directory.CreateDirectory(this.destination);
 		}
 		/// <summary>
@@ -83,9 +85,18 @@ namespace StarCitizen_XML_to_JSON.Cry
 		/// <returns></returns>
 		public static SCType DetectType(string filename)
 		{
-			XmlDocument xml = new XmlDocument();
-			xml.Load(filename);
-			return DetectType(xml);
+			try
+			{
+				XmlDocument xml = new XmlDocument();
+				xml.Load(filename);
+				return DetectType(xml);
+			}
+			catch (Exception)
+			{
+				Logger.LogWarning($"Failed to convert to XML '{filename}'", start: "\n");
+				return SCType.None;
+			}
+			
 		}
 
 		/// <summary>
