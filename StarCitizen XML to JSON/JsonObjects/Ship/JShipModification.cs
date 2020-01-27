@@ -72,6 +72,10 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Ship
 						var id = node.Attributes["id"].Value;   // get the id
 						var target = doc.SelectSingleNode($"//*[@id='{id}']");   // get the target of the id
 
+						// Fix to replace modParts by xmlParts
+						if (target == null && id == "modParts")
+							target = doc.SelectSingleNode($"//*[@id='xmlParts']");
+
 						target = RecursiveReplace(target, node);
 					}
 				}
