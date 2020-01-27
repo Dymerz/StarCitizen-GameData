@@ -68,7 +68,7 @@ namespace StarCitizen_XML_to_JSON.JsonObjects
 			{
 				// serealize XML to JSON
 				var plain_json = JsonConvert.SerializeXmlNode(root, Newtonsoft.Json.Formatting.Indented, true);
-
+				
 				// remove @ before property name
 				plain_json = Regex.Replace(plain_json, "([\"\'])(@)((.*?)[\"\']\\:)", "$1$3");
 
@@ -84,8 +84,17 @@ namespace StarCitizen_XML_to_JSON.JsonObjects
 				// remove '"' to numbers (int, float, double,..)
 				plain_json = Regex.Replace(plain_json, "([\"\'])([0-9]*[(\\.[0-9]+]?)([\"\'])", "$2");
 
-				// escape  '\'
-				plain_json = Regex.Replace(plain_json, @"\\", "\\\\");
+				// escape  '\' and avoid escape '\"'
+				plain_json = Regex.Replace(plain_json, "\\\\(\\\\)?([^\"])", "\\\\$2");
+
+				// escape  '''
+				plain_json = Regex.Replace(plain_json, "\\\\(\\\\)?([^\"])", "\\\\$2");
+
+				// escape '&quot;'
+				plain_json = Regex.Replace(plain_json, "(&quot;)", String.Empty);
+
+				// apply locale
+				plain_json = ApplyLocal(plain_json);
 
 				writer.Write(plain_json);
 			}
@@ -93,6 +102,21 @@ namespace StarCitizen_XML_to_JSON.JsonObjects
 			// add the file to the files list to be validated later
 			generatedFiles.Add(new FileInfo(filename));
 			converted_count++;
+		}
+
+		private string ApplyLocal(string plain_json)
+		{
+			string plain_json_copy = new String(plain_json);
+			foreach (Match m in Regex.Matches(plain_json_copy, "(\\@(.?)*)\""))
+			{
+				string key = m.Groups[1].Value;
+				string value = Cry.CryXML.localization.FindKey(key);
+
+				if (value != null)
+					plain_json = Regex.Replace(plain_json, key, value);
+			}
+
+			return plain_json;
 		}
 
 		public string Sanitize(string value)
