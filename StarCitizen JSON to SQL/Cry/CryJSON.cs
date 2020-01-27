@@ -82,15 +82,9 @@ namespace StarCitizen_JSON_to_SQL.Cry
 
 		private int getCategoryId(SCType type)
 		{
-			int index = 1;
-			foreach (var cat in categories)
-			{
-				if (cat.Equals(type.ToString()))
-					return index;
-				index++;
-			}
-			return -1;
+			return (int)Math.Log((int)type, 2);
 		}
+
 		public static SCType DetectType(string file)
 		{
 			switch (new FileInfo(file).Directory.Name.ToLower())
