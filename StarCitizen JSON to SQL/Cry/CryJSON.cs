@@ -37,6 +37,9 @@ namespace StarCitizen_JSON_to_SQL.Cry
 			if (Program.minify)
 			{
 				content = Regex.Replace(content, "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", "$1");
+				content = Regex.Replace(content, "\\\\", "\\\\");
+				content = Regex.Replace(content, @"\\\\'", "\\\'");
+				content = Regex.Replace(content, "\t", "\\\\t");
 			}
 
 			string name = f.Name.Replace(".json", "").Replace("_", " ");
@@ -52,7 +55,7 @@ namespace StarCitizen_JSON_to_SQL.Cry
 		public void ConvertCategory()
 		{
 			categories = Enum.GetNames(typeof(SCType));
-			int index = 1;
+
 
 			string sql_format = "INSERT IGNORE INTO `{0}`.`category`(`id`, `value`, `name`, `label`) VALUES ({1}, {2}, '{3}', '{4}');";
 			using (StreamWriter writer = new StreamWriter(destination, true))
@@ -73,9 +76,9 @@ namespace StarCitizen_JSON_to_SQL.Cry
 					else
 						label = label[0].ToString().ToUpper() + label.Substring(1);
 
+					int index = getCategoryId((SCType)Enum.Parse(typeof(SCType), cat));
 					writer.WriteLine(
 						String.Format(sql_format, database_name, index, (int)Enum.Parse(typeof(SCType), cat), cat.ToLower(), label));
-					index++;
 				}
 			}
 		}
