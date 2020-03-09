@@ -9,6 +9,8 @@ namespace StarCitizen_XML_to_JSON
 {
     class Program
 	{
+		public static string VERSION = "0.5";
+
 		public static bool debug { get; internal set; } = false;
 		public static DateTime starttime = DateTime.Now;
 		public static string assembly_directory =  AppContext.BaseDirectory;
@@ -21,6 +23,11 @@ namespace StarCitizen_XML_to_JSON
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 			bool hasException = false;
 
+			if (args.Contains("-v") || args.Contains("--version"))
+			{
+				PrintVersion();
+				return;
+			}else
 			if (args.Length < 1 || args.Contains("-h") || args.Contains("--help"))
 			{
 				PrintHelp();
@@ -159,7 +166,6 @@ namespace StarCitizen_XML_to_JSON
 			Exit(hasException);
 		}
 
-
 		private static void PrintHelp()
 		{
 			Logger.LogEmpty("Usage: dotnet StarCitizen_XML_to_JSON.dll [source] <destination> [CONFIG] [FILTER(S)]");
@@ -176,9 +182,10 @@ namespace StarCitizen_XML_to_JSON
 			Logger.LogEmpty("\t--cache\t\tuse a local cache to speed up the process.");
 			Logger.LogEmpty("\t\t\tdefault: do not use the cache.");
 			Logger.LogEmpty("\t--rebuild\t\trebuild the cache.");
-			Logger.LogEmpty("\t--english, -h\tUse the english localization (Default).");
-			Logger.LogEmpty("\t--french, -h\tUse the french localization.");
-			Logger.LogEmpty("\t--german, -h\tUse the german localization.");
+			Logger.LogEmpty("\t--english\tUse the english localization (Default).");
+			Logger.LogEmpty("\t--french\tUse the french localization.");
+			Logger.LogEmpty("\t--german\tUse the german localization.");
+			Logger.LogEmpty("\t--version, -v\tShow the current version.");
 			Logger.LogEmpty("\t--help, -h\tprint this message.");
 			Logger.LogEmpty();
 			Logger.LogEmpty("[Filters]");
@@ -191,6 +198,11 @@ namespace StarCitizen_XML_to_JSON
 			Logger.LogEmpty("\t--shops, -S\t\tConvert Shops.");
 			Logger.LogEmpty("\t--manufacturers, -m\tConvert Manufacturers.");
 			Logger.LogEmpty("\t--starmap, -sh\t\tConvert Starmap.");
+		}
+
+		private static void PrintVersion()
+		{
+			Logger.LogEmpty($"Version: {VERSION}");
 		}
 
 		/// <summary>

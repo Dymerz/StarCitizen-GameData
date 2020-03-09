@@ -8,6 +8,8 @@ namespace StarCitizen_JSON_to_SQL
 {
 	class Program
 	{
+		public static string VERSION = "0.5";
+
 		public static bool debug { get; internal set; } = false;
 		public static bool minify { get; internal set; } = false;
 
@@ -20,6 +22,11 @@ namespace StarCitizen_JSON_to_SQL
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 			bool hasException = false;
 
+			if (args.Contains("-v") || args.Contains("--version"))
+			{
+				PrintVersion();
+				return;
+			}else
 			if (args.Length < 4 || args.Contains("-h") || args.Contains("--help"))
 			{
 				PrintHelp();
@@ -93,11 +100,13 @@ namespace StarCitizen_JSON_to_SQL
 			foreach (Tuple<string, SCType> file in new ProgressBar(files, "Converting", true))
 			{
 				FileInfo f = new FileInfo(file.Item1);
+
 				if (category != file.Item2)
 				{
 					category = file.Item2;
 					Logger.LogEmpty();
 					Logger.LogInfo($"Category [{category.ToString()}]", clear_line: true);
+					
 				}
 
 				Logger.Log($"Converting {f.Name}..  ", end: "");
@@ -151,6 +160,10 @@ namespace StarCitizen_JSON_to_SQL
 			Logger.LogEmpty("\t--starmap, -sh\t\tConvert Starmap.");
 		}
 
+		private static void PrintVersion()
+		{
+			Logger.LogEmpty($"Version: {VERSION}");
+		}
 		/// <summary>
 		/// Exit the application
 		/// </summary>
