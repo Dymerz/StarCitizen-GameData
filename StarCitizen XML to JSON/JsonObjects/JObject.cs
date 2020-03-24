@@ -41,16 +41,16 @@ namespace StarCitizen_XML_to_JSON.JsonObjects
 		/// </summary>
 		public void ValidateFiles()
 		{
-				if (generatedFiles.Count == 0)
-					throw new Exception("The variable 'generatedFiles' can't empty");
+			if (generatedFiles.Count == 0)
+				throw new Exception("The variable 'generatedFiles' can't empty");
 
-				foreach (var file in generatedFiles)
+			foreach (var file in generatedFiles)
+			{
+				using (StreamReader reader = new StreamReader(file.FullName))
 				{
-					using (StreamReader reader = new StreamReader(file.FullName))
-					{
-						JsonConvert.DeserializeObject(reader.ReadToEnd());
-					}
+					JsonConvert.DeserializeObject(reader.ReadToEnd());
 				}
+			}
 		}
 
 		/// <summary>
