@@ -132,7 +132,7 @@ namespace StarCitizen_JSON_to_SQL
 
 		private static void PrintHelp()
 		{
-			Logger.LogEmpty("Usage: dotnet StarCitizen_JSON_to_SQL <source> <destination> <database name> <version> [CONFIG] [FILTER(S)]");
+			Logger.LogEmpty("Usage: dotnet StarCitizen_JSON_to_SQL source destination database_name sc_version [config...] [filter...]");
 			Logger.LogEmpty("Convert any StarCitizen JSON files to SQL");
 			Logger.LogEmpty();
 			Logger.LogEmpty("[Required]");
@@ -157,7 +157,7 @@ namespace StarCitizen_JSON_to_SQL
 			Logger.LogEmpty("\t--tags, -t\t\tConvert Tags.");
 			Logger.LogEmpty("\t--shops, -S\t\tConvert Shops.");
 			Logger.LogEmpty("\t--manufacturers, -m\tConvert Manufacturers.");
-			Logger.LogEmpty("\t--starmap, -sh\t\tConvert Starmap.");
+			Logger.LogEmpty("\t--starmap, -sm\t\tConvert Starmap.");
 		}
 
 		private static void PrintVersion()

@@ -168,7 +168,7 @@ namespace StarCitizen_XML_to_JSON
 
 		private static void PrintHelp()
 		{
-			Logger.LogEmpty("Usage: dotnet StarCitizen_XML_to_JSON.dll [source] <destination> [CONFIG] [FILTER(S)]");
+			Logger.LogEmpty("Usage: dotnet StarCitizen_XML_to_JSON.dll source [destination] [config...] [filters...]");
 			Logger.LogEmpty("Convert any StarCitizen XML files to JSON");
 			Logger.LogEmpty();
 			Logger.LogEmpty("[Required]");
@@ -272,6 +272,7 @@ namespace StarCitizen_XML_to_JSON
 						break;
 					case "--rebuild":
 						CryXML.game.DeleteCache();
+						useCache = true;
 						break;
 
 					case "--debug":
