@@ -129,7 +129,7 @@ namespace SharedProject
 		}
 
 		/// <summary>
-		/// Append all logs to the file
+		/// Write all logs to the file
 		/// </summary>
 		public static void WriteLog()
 		{

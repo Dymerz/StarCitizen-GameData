@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using SharedProject;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,22 +7,34 @@ using System.Xml;
 
 namespace StarCitizen_XML_to_JSON.JsonObjects
 {
+	/// <summary>
+	/// JObject is an abstract class which every componements (Ship, Weapon, ..) inherit
+	/// </summary>
 	abstract class JObject
 	{
-		public static int converted_count = 0;
+		public static int converted_count { get; private set; } = 0;
 
 		public XmlDocument doc { get; private protected set; } = null;
-		public FileInfo file;
-		internal List<FileInfo> generatedFiles;
+		public FileInfo file { get; private set; }
+		private List<FileInfo> generatedFiles;
 
-		public string destination;
-		public string source;
+		public string destination { get; private set; }
+		public string source { get; private set; }
 
-		abstract internal string directory_name { get;}
+		abstract internal string directory_name { get; }
 
-		protected JObject(XmlDocument doc, FileInfo file, string destination, string source)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="doc">The original file</param>
+		/// <param name="file"></param>
+		/// <param name="destination"></param>
+		/// <param name="source"></param>
+		protected JObject(FileInfo file, string destination, string source)
 		{
-			this.doc = doc ?? throw new ArgumentNullException(nameof(doc));
+			this.doc = new XmlDocument();
+			doc.LoadXml(File.ReadAllText(file.FullName));
+
 			this.file = file ?? throw new ArgumentNullException(nameof(file));
 			this.destination = destination ?? throw new ArgumentNullException(nameof(destination));
 			this.source = source ?? throw new ArgumentNullException(nameof(source));
@@ -35,14 +46,18 @@ namespace StarCitizen_XML_to_JSON.JsonObjects
 				Directory.CreateDirectory(Path.Combine(destination, directory_name));
 		}
 
-		public abstract void Process();
 		/// <summary>
-		/// Valid all generated files by loading them
+		/// Called by CryXML to start the convert process
+		/// </summary>
+		public abstract void Process();
+
+		/// <summary>
+		/// Validate all generated files by loading them
 		/// </summary>
 		public void ValidateFiles()
 		{
 			if (generatedFiles.Count == 0)
-				throw new Exception("The variable 'generatedFiles' can't empty");
+				throw new Exception("The variable 'generatedFiles' can't be empty");
 
 			foreach (var file in generatedFiles)
 			{
@@ -56,7 +71,8 @@ namespace StarCitizen_XML_to_JSON.JsonObjects
 		/// <summary>
 		/// Write to a JSON file the edited XMLDocument
 		/// </summary>
-		/// <param name="doc">document to write</param>
+		/// <param name="doc">The document to write</param>
+		/// <param name="name">The name of the file</param>
 		public void WriteFile(XmlDocument doc, string name)
 		{
 			XmlNode root = doc.FirstChild;
@@ -104,6 +120,11 @@ namespace StarCitizen_XML_to_JSON.JsonObjects
 			converted_count++;
 		}
 
+		/// <summary>
+		/// Replace all locals code from a JSON string
+		/// </summary>
+		/// <param name="plain_json">The JSON String to convert</param>
+		/// <returns>The JSON with locals</returns>
 		private string ApplyLocal(string plain_json)
 		{
 			string plain_json_copy = new String(plain_json);
@@ -119,6 +140,11 @@ namespace StarCitizen_XML_to_JSON.JsonObjects
 			return plain_json;
 		}
 
+		/// <summary>
+		/// Sanitize a string replacing unwanted syntax
+		/// </summary>
+		/// <param name="value">The string to be cleaned</param>
+		/// <returns>A cleaned string</returns>
 		public string Sanitize(string value)
 		{
 			value = value.Replace("_", " ");

@@ -2,6 +2,7 @@
 using StarCitizen_XML_to_JSON.Cry;
 using StarCitizen_XML_to_JSON.JsonObjects;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -23,6 +24,7 @@ namespace StarCitizen_XML_to_JSON
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
 			bool hasException = false;
 
+			// Check if version or required arguments are passed
 			if (args.Contains("-v") || args.Contains("--version"))
 			{
 				PrintVersion();
@@ -36,12 +38,17 @@ namespace StarCitizen_XML_to_JSON
 
 			string working_dir = Environment.CurrentDirectory;
 
-			args[0] = args[0].Trim(new char[] { '\'', '\"' });
-			args[1] = args[1].Trim(new char[] { '\'', '\"' });
+			args[0] = args[0].Trim(new char[] { '\'', '\"' }); // Trim ' in source
+			args[1] = args[1].Trim(new char[] { '\'', '\"' }); // Trim " in destination
 
 			string source = new DirectoryInfo(args[0]).FullName;
 			var destination = new DirectoryInfo((Directory.Exists(args[1])) ? args[1] : "./").FullName;
-			SCType filters = FindParameters(args.Skip(destination == "./" ? 1 : 2).ToArray()); // skip source and destination from args
+
+			// Ignore destination if not specified in arguments
+			args = args.Skip(destination == "./" ? 1 : 2).ToArray();
+
+			// Process arguments
+			SCType filters = FindParameters(args); // skip source and destination from args
 
 			Logger.LogEmpty("Process has started.");
 			Logger.LogDebug("DEBUG MODE ENABLED");
@@ -63,6 +70,7 @@ namespace StarCitizen_XML_to_JSON
 			}
 			Logger.LogEmpty();
 
+			// If no filter is provided, print message
 			if (filters == SCType.None)
 			{
 				Logger.LogInfo("No filter(s) entered,  try to add a least one filter.");
@@ -73,8 +81,11 @@ namespace StarCitizen_XML_to_JSON
 			Logger.Log("Loading directory (this can take some time).. ", end: "");
 			Tuple<string, SCType>[] files = null;
 
+			// Load all files form the source directory
 #if DEBUG
-			files = (Tuple<string, SCType>[])Progress.Process(() => GetFiles(source, filters), "Done");
+			files = (Tuple<string, SCType>[])Progress.Process(() => 
+				GetFiles(source, filters), 
+				"Done");
 #else
 			try
 			{
@@ -90,6 +101,7 @@ namespace StarCitizen_XML_to_JSON
 			Logger.Log("Preparing resources.. ", end: "");
 			CryXML cryXml = null;
 
+			// Load some XML file in memory
 #if DEBUG
 			cryXml = (CryXML)Progress.Process(() => new CryXML(source, destination), "Done");
 #else
@@ -104,6 +116,7 @@ namespace StarCitizen_XML_to_JSON
 			}
 #endif
 
+			// Load cached data
 			if (useCache)
 			{
 				try
@@ -138,6 +151,8 @@ namespace StarCitizen_XML_to_JSON
 			foreach (Tuple<string, SCType> file in new ProgressBar(files, "Converting", true))
 			{
 				FileInfo f = new FileInfo(file.Item1);
+
+				// Print category section
 				if (category != file.Item2)
 				{
 					category = file.Item2;
@@ -147,7 +162,7 @@ namespace StarCitizen_XML_to_JSON
 
 				Logger.Log($"Converting {f.Name}..  ", end: "");
 
-				// catch exception on Release build
+				// Start XML conversion
 #if DEBUG
 				Progress.Process(() => cryXml.ConvertJSON(f, file.Item2), "Done");
 #else
@@ -165,97 +180,31 @@ namespace StarCitizen_XML_to_JSON
 
 			Exit(hasException);
 		}
-
-		private static void PrintHelp()
-		{
-			Logger.LogEmpty("Usage: dotnet StarCitizen_XML_to_JSON.dll source [destination] [config...] [filters...]");
-			Logger.LogEmpty("Convert any StarCitizen XML files to JSON");
-			Logger.LogEmpty();
-			Logger.LogEmpty("[Required]");
-			Logger.LogEmpty("\tsource: \tthe folder to extract XML data.");
-			Logger.LogEmpty();
-			Logger.LogEmpty("[Config]");
-			Logger.LogEmpty("\tdestination\twrite all JSON in the destination, respecting source hierarchy.");
-			Logger.LogEmpty("\t\t\tdefault: current working directory.");
-			Logger.LogEmpty("\t--debug\t\tprint all Debug infos.");
-			Logger.LogEmpty("\t\t\tdefault: no.");
-			Logger.LogEmpty("\t--cache\t\tuse a local cache to speed up the process.");
-			Logger.LogEmpty("\t\t\tdefault: do not use the cache.");
-			Logger.LogEmpty("\t--rebuild\t\trebuild the cache.");
-			Logger.LogEmpty("\t--english\tUse the english localization (Default).");
-			Logger.LogEmpty("\t--french\tUse the french localization.");
-			Logger.LogEmpty("\t--german\tUse the german localization.");
-			Logger.LogEmpty("\t--version, -v\tShow the current version.");
-			Logger.LogEmpty("\t--help, -h\tprint this message.");
-			Logger.LogEmpty();
-			Logger.LogEmpty("[Filters]");
-			Logger.LogEmpty("\t--all\t\t\tConvert every entities.");
-			Logger.LogEmpty("\t--ships, -s\t\tConvert Ships.");
-			Logger.LogEmpty("\t--weapons, -w\t\tConvert Weapons.");
-			Logger.LogEmpty("\t--weapons-magazine, -wm\tConvert Weapons Magazines.");
-			Logger.LogEmpty("\t--commodities, -c\tConvert Commodities.");
-			Logger.LogEmpty("\t--tags, -t\t\tConvert Tags.");
-			Logger.LogEmpty("\t--shops, -S\t\tConvert Shops.");
-			Logger.LogEmpty("\t--manufacturers, -m\tConvert Manufacturers.");
-			Logger.LogEmpty("\t--starmap, -sh\t\tConvert Starmap.");
-		}
-
-		private static void PrintVersion()
-		{
-			Logger.LogEmpty($"Version: {VERSION}");
-		}
-
+		
 		/// <summary>
-		/// Exit the application
-		/// </summary>
-		/// <param name="hasException"></param>
-		private static void Exit(bool hasException, bool saveCache = true)
-		{
-			Logger.LogEmpty();
-			if (saveCache)
-			{
-				Logger.LogInfo("Saving cache..  ", end: "");
-				Progress.Process(() => CryXML.game.SaveCache(), "Done");
-				Logger.LogEmpty();
-			}
-			
-			Logger.LogInfo($"Output files: {JObject.converted_count}");
-			Logger.LogInfo($"Execution time: {(DateTime.Now-starttime).TotalSeconds.ToString("00.00s")}");
-
-			if (hasException)
-			{
-				Logger.LogEmpty();
-				Logger.LogEmpty("=====================================");
-				Logger.LogError("Something went wrong!");
-				Logger.LogError($"More details can be found in: '{Path.Combine(assembly_directory, Logger.filename)}'");
-				Logger.LogEmpty("=====================================");
-			}
-			Logger.LogEmpty();
-			Logger.WriteLog();
-			Environment.Exit(hasException ? 1 : 0);
-		}
-
-		/// <summary>
-		/// Get all xml files in de directory and subdirectory
+		/// Get all xml files in a directory and its subdirectories
 		/// </summary>
 		/// <param name="source">Where to search for XML</param>
 		/// <returns></returns>
 		private static Tuple<string, SCType>[] GetFiles(string source, SCType filter)
 		{
+			List<Tuple<string, SCType>> files = new List<Tuple<string, SCType>>();
+
+			foreach (var f in Directory.GetFiles(source, "*.xml", SearchOption.AllDirectories))
 			{
-				return Directory.GetFiles(source, "*.xml", SearchOption.AllDirectories)
-					.Where(f =>
-						!f.ToLower().EndsWith("game.xml") &&
-						(filter & CryXML.DetectType(f)) != SCType.None)
-					.ToList()
-					.ConvertAll(f => new Tuple<string, SCType>(f, CryXML.DetectType(f)))
-					.OrderBy(f => f.Item2)
-					.ToArray();
+				SCType type = CryXML.DetectType(f);
+
+				// Dont process game.xml and not supported files
+				if (f.ToLower().Equals("game.xml") || (filter & type) == SCType.None)
+					continue;
+
+				files.Add(new Tuple<string, SCType>(f, type));
 			}
+			return files.OrderBy(f => f.Item2).ToArray();
 		}
 
 		/// <summary>
-		/// Parse all args from terminal
+		/// Parse all args
 		/// </summary>
 		/// <param name="args"></param>
 		/// <returns></returns>
@@ -337,5 +286,82 @@ namespace StarCitizen_XML_to_JSON
 			Logger.debug = debug;
 			return parameters;
 		}
-    }
+
+		/// <summary>
+		/// Print the help message
+		/// </summary>
+		private static void PrintHelp()
+		{
+			Logger.LogEmpty("Usage: dotnet StarCitizen_XML_to_JSON.dll source [destination] [config...] [filters...]");
+			Logger.LogEmpty("Convert any StarCitizen XML files to JSON");
+			Logger.LogEmpty();
+			Logger.LogEmpty("[Required]");
+			Logger.LogEmpty("\tsource: \tthe folder to extract XML data.");
+			Logger.LogEmpty();
+			Logger.LogEmpty("[Config]");
+			Logger.LogEmpty("\tdestination\twrite all JSON in the destination, respecting source hierarchy.");
+			Logger.LogEmpty("\t\t\tdefault: current working directory.");
+			Logger.LogEmpty("\t--debug\t\tprint all Debug infos.");
+			Logger.LogEmpty("\t\t\tdefault: no.");
+			Logger.LogEmpty("\t--cache\t\tuse a local cache to speed up the process.");
+			Logger.LogEmpty("\t\t\tdefault: do not use the cache.");
+			Logger.LogEmpty("\t--rebuild\t\trebuild the cache.");
+			Logger.LogEmpty("\t--english\tUse the english localization (Default).");
+			Logger.LogEmpty("\t--french\tUse the french localization.");
+			Logger.LogEmpty("\t--german\tUse the german localization.");
+			Logger.LogEmpty("\t--version, -v\tShow the current version.");
+			Logger.LogEmpty("\t--help, -h\tprint this message.");
+			Logger.LogEmpty();
+			Logger.LogEmpty("[Filters]");
+			Logger.LogEmpty("\t--all\t\t\tConvert every entities.");
+			Logger.LogEmpty("\t--ships, -s\t\tConvert Ships.");
+			Logger.LogEmpty("\t--weapons, -w\t\tConvert Weapons.");
+			Logger.LogEmpty("\t--weapons-magazine, -wm\tConvert Weapons Magazines.");
+			Logger.LogEmpty("\t--commodities, -c\tConvert Commodities.");
+			Logger.LogEmpty("\t--tags, -t\t\tConvert Tags.");
+			Logger.LogEmpty("\t--shops, -S\t\tConvert Shops.");
+			Logger.LogEmpty("\t--manufacturers, -m\tConvert Manufacturers.");
+			Logger.LogEmpty("\t--starmap, -sh\t\tConvert Starmap.");
+		}
+
+		/// <summary>
+		/// Print the current version
+		/// </summary>
+		private static void PrintVersion()
+		{
+			Logger.LogEmpty($"Version: {VERSION}");
+		}
+
+		/// <summary>
+		/// Exit the application and save the cache
+		/// </summary>
+		/// <param name="hasException"></param>
+		private static void Exit(bool hasException, bool saveCache = true)
+		{
+			Logger.LogEmpty();
+
+			if (saveCache)
+			{
+				Logger.LogInfo("Saving cache..  ", end: "");
+				Progress.Process(() => CryXML.game.SaveCache(), "Done");
+				Logger.LogEmpty();
+			}
+
+			Logger.LogInfo($"Output files: {JObject.converted_count}");
+			Logger.LogInfo($"Execution time: {(DateTime.Now - starttime).TotalSeconds.ToString("00.00s")}");
+
+			if (hasException)
+			{
+				Logger.LogEmpty();
+				Logger.LogEmpty("=====================================");
+				Logger.LogError("Something went wrong!");
+				Logger.LogError($"More details can be found in: '{Path.Combine(assembly_directory, Logger.filename)}'");
+				Logger.LogEmpty("=====================================");
+			}
+			Logger.LogEmpty();
+			Logger.WriteLog();
+			Environment.Exit(hasException ? 1 : 0);
+		}
+
+	}
 }
