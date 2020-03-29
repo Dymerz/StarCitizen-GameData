@@ -8,7 +8,7 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Weapon
 	{
 		internal override string directory_name { get => "WeaponsMagazine"; }
 
-		public JWeaponMagazine(XmlDocument doc, FileInfo file, string destination, string source) : base(doc, file, destination, source) { }
+		public JWeaponMagazine(FileInfo file, string destination, string source) : base(file, destination, source) { }
 
 		/// <summary>
 		/// Process the XML conversion
@@ -34,8 +34,6 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Weapon
 
 			var name = root.Name.Split(".")[1];
 			base.WriteFile(doc, name); // write the main ship
-
-			base.ValidateFiles();
 		}
 	}
 }

@@ -9,7 +9,7 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.JCommodity
 	{
 		internal override string directory_name { get => "Commodities"; }
 
-		public JCommodity(XmlDocument doc, FileInfo file, string destination, string source) : base(doc, file, destination, source) { }
+		public JCommodity(FileInfo file, string destination, string source) : base(file, destination, source) { }
 
 		public override void Process()
 		{
@@ -51,8 +51,6 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.JCommodity
 			}
 
 			base.WriteFile(doc, name); // write the main ship
-
-			base.ValidateFiles();
 		}
 
 		private string[] LoadTags(XmlNode root)

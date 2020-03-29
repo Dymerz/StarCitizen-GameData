@@ -10,7 +10,7 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Ship
 	{
 		internal override string directory_name { get => "Ships"; }
 
-		public JShip(XmlDocument doc, FileInfo file, string destination, string source) : base(doc, file, destination, source) { }
+		public JShip(FileInfo file, string destination, string source) : base(file, destination, source) { }
 
 		/// <summary>
 		/// Process the XML conversion
@@ -44,8 +44,6 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Ship
 					base.WriteFile(m.model, name);
 				}	
 			}
-
-			base.ValidateFiles();
 		}
 
 		/// <summary>

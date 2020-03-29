@@ -31,6 +31,7 @@ namespace StarCitizen_XML_to_JSON.Cry
 			localization = new CryLocalization(source);
 			Directory.CreateDirectory(this.destination);
 		}
+
 		/// <summary>
 		/// Convert a file into a JSON representation
 		/// </summary>
@@ -38,33 +39,29 @@ namespace StarCitizen_XML_to_JSON.Cry
 		/// <param name="filter">SCType: filter</param>
 		public void ConvertJSON(FileInfo file, SCType type)
 		{
-			// Load the XML
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml(File.ReadAllText(file.FullName));
-
 			// Cast JObject to the right type
 			JObject jObject = null;
 			switch (type)
 			{
 				case SCType.Ship:
-					jObject = new JShip(doc, file, destination, source);
+					jObject = new JShip(file, destination, source);
 					break;
 				case SCType.Shop:
-					jObject = new JShop(doc, file, destination, source);
+					jObject = new JShop(file, destination, source);
 					break;
 				case SCType.Weapon:
-					jObject = new JWeapon(doc, file, destination, source);
+					jObject = new JWeapon(file, destination, source);
 					break;
 				case SCType.Weapon_Magazine:
-					jObject = new JWeaponMagazine(doc, file, destination, source);
+					jObject = new JWeaponMagazine(file, destination, source);
 					break;
 				case SCType.Commodity:
-					jObject = new JCommodity(doc, file, destination, source);
+					jObject = new JCommodity(file, destination, source);
 					break;
 				//case SCType.Tag:
 				//	break;
 				case SCType.Manufacturer:
-					jObject = new JManufacturer(doc, file, destination, source);
+					jObject = new JManufacturer(file, destination, source);
 					break;
 				//case SCType.Starmap:
 				//	break;
@@ -74,8 +71,12 @@ namespace StarCitizen_XML_to_JSON.Cry
 				default:
 					throw new Exception($"Unknow CSType: '{file.FullName}', cannot determine the SCType");
 			}
+
 			// Start processing
 			jObject?.Process();
+
+			// Validate generated file(s)
+			jObject?.ValidateFiles();
 		}
 
 		/// <summary>
@@ -102,7 +103,7 @@ namespace StarCitizen_XML_to_JSON.Cry
 		/// <summary>
 		/// Detect the type of the file
 		/// </summary>
-		/// <param name="filename">XmlDocument: the targeted file</param>
+		/// <param name="xfile">XmlDocument: the targeted file</param>
 		/// <returns></returns>
 		private static SCType DetectType(XmlDocument xfile)
 		{

@@ -9,7 +9,7 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Weapon
 	{
 		internal override string directory_name { get => "Weapons"; }
 
-		public JWeapon(XmlDocument doc, FileInfo file, string destination, string source) : base(doc, file, destination, source) { }
+		public JWeapon(FileInfo file, string destination, string source) : base(file, destination, source) { }
 
 		public override void Process()
 		{
@@ -40,7 +40,6 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Weapon
 			}
 
 			base.WriteFile(doc, name);
-			base.ValidateFiles();
 		}
 
 		private string[] LoadTags(XmlNode root)

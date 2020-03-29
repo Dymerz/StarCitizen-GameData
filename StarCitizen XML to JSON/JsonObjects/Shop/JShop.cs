@@ -9,7 +9,7 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.JShop
 	{
 		internal override string directory_name { get => "Shops"; }
 
-		public JShop(XmlDocument doc, FileInfo file, string destination, string source) : base(doc, file, destination, source) { }
+		public JShop(FileInfo file, string destination, string source) : base(file, destination, source) { }
 
 		/// <summary>
 		/// Process the XML conversion
@@ -52,8 +52,6 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.JShop
 				var name = (layout.Attributes["Name"]?.Value ?? layout.Attributes["name"]?.Value).ToString();
 				base.WriteFile(doc_layout, name);
 			}
-
-			base.ValidateFiles();
 		}
 	}
 }

@@ -8,7 +8,7 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Manufacturer
 	{
 		internal override string directory_name { get => "Manufacturers"; }
 
-		public JManufacturer(XmlDocument doc, FileInfo file, string destination, string source) : base(doc, file, destination, source) { }
+		public JManufacturer(FileInfo file, string destination, string source) : base(file, destination, source) { }
 
 		/// <summary>
 		/// Process the XML conversion
@@ -19,8 +19,6 @@ namespace StarCitizen_XML_to_JSON.JsonObjects.Manufacturer
 
 			var name = root.Name.Split(".")[1];
 			base.WriteFile(doc, name); // write the main ship
-
-			base.ValidateFiles();
 		}
 	}
 }
