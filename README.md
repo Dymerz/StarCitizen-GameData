@@ -71,7 +71,6 @@ This tool is user by the StarCitizen-API to allow user to easily retrieve Star C
 - Install [unp4k](https://github.com/dolkensp/unp4k) and follow its instructions.
 - Clone this repo.
 - Install all dependencies using `nuget install`.
-- Start coding !
 
 ### Building
 
