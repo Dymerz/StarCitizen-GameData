@@ -4,7 +4,7 @@ This tool allow users to convert raw XML from the [unp4k](https://github.com/dol
 
 You can also directly download binaries [here](https://github.com/Dymerz/StarCitizen-GameData/releases).
 
-This tool is user by the StarCitizen-API to allow user to easily retrieve Star Citizen data, if you want to contribute, follow the [contributing](contributing.md) guideline.
+This tool is user by the StarCitizen-API to allow user to easily retrieve Star Citizen data, if you want to contribute, follow the [contributing](CONTRIBUTING.md) guideline.
 
 ![Discord](https://img.shields.io/badge/discord-join-%237289DA?link=https://discord.gg/EcWagya)
 
@@ -87,4 +87,4 @@ This tool is user by the StarCitizen-API to allow user to easily retrieve Star C
 
 ## Contributes
 
-To contribute to this project, see [contributing](contributing.md) file.
+To contribute to this project, see [contributing](CONTRIBUTING.md) file.
