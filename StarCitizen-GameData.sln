@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29215.179
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StarCitizen_XML_To_JSON", "StarCitizen_XML_To_JSON\StarCitizen_XML_To_JSON.csproj", "{D1AEB2E7-43A3-46FB-8AFB-5B819E558692}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StarCitizen_JSON_To_SQL", "StarCitizen_JSON_To_SQL\StarCitizen_JSON_To_SQL.csproj", "{AD19CB84-1CF4-4820-BBFF-0AE97B99CF21}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SharedProject", "SharedProject\SharedProject.shproj", "{BF30DDCE-73A3-4B79-9B14-3C8676587B1D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0FAC830F-BD3D-4A88-8C8B-C42CC2FB7ED3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StarCitizen_GameDataTests", "StarCitizen-GameDataTests\StarCitizen_GameDataTests.csproj", "{06FC55B4-45C0-4F21-9502-A2095F3FD3B5}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		SharedProject\SharedProject.projitems*{ad19cb84-1cf4-4820-bbff-0ae97b99cf21}*SharedItemsImports = 5
+		SharedProject\SharedProject.projitems*{bf30ddce-73a3-4b79-9b14-3c8676587b1d}*SharedItemsImports = 13
+		SharedProject\SharedProject.projitems*{d1aeb2e7-43a3-46fb-8afb-5b819e558692}*SharedItemsImports = 5
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D1AEB2E7-43A3-46FB-8AFB-5B819E558692}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1AEB2E7-43A3-46FB-8AFB-5B819E558692}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1AEB2E7-43A3-46FB-8AFB-5B819E558692}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1AEB2E7-43A3-46FB-8AFB-5B819E558692}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD19CB84-1CF4-4820-BBFF-0AE97B99CF21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD19CB84-1CF4-4820-BBFF-0AE97B99CF21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD19CB84-1CF4-4820-BBFF-0AE97B99CF21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD19CB84-1CF4-4820-BBFF-0AE97B99CF21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06FC55B4-45C0-4F21-9502-A2095F3FD3B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06FC55B4-45C0-4F21-9502-A2095F3FD3B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06FC55B4-45C0-4F21-9502-A2095F3FD3B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06FC55B4-45C0-4F21-9502-A2095F3FD3B5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {042FE045-4787-46D1-A94C-869557ABB288}
+	EndGlobalSection
+EndGlobal

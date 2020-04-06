@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "StarCitizen JSON to SQL": {
+      "commandName": "Project",
+      "commandLineArgs": "\"P:\\Star Citizen Dev\\[3.8.1]\\Data.json\" \"P:\\Star Citizen Dev\\[3.8.1]\\database.sql\" starcitizen-gamedata 3.8.1 --all --minify"
+    }
+  }
+}

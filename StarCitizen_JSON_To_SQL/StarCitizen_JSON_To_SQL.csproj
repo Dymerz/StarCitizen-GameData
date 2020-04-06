@@ -5,15 +5,17 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>StarCitizen_JSON_to_SQL</RootNamespace>
     <AssemblyName>StarCitizen_JSON_to_SQL</AssemblyName>
+	<InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
-
-  <Import Project="..\SharedProject\SharedProject.projitems" Label="Shared" />
 
   <ItemGroup>
     <PackageReference Include="NuGet.CommandLine" Version="5.4.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+		<RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="true" />
   </ItemGroup>
+
+  <Import Project="..\SharedProject\SharedProject.projitems" Label="Shared" />
 
 </Project>
