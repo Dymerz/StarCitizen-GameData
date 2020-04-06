@@ -15,6 +15,14 @@ This tool is user by the StarCitizen-API to allow user to easily retrieve Star C
 
 ## Usage
 
+### Extract **Data.p4k**
+```bat
+	unp4k.exe "C:\Program Files\Roberts Space Industries\StarCitizen\LIVE\Data.p4k" "*.xml"
+	unp4k.exe "C:\Program Files\Roberts Space Industries\StarCitizen\LIVE\Data.p4k" "*.json"
+	unp4k.exe "C:\Program Files\Roberts Space Industries\StarCitizen\LIVE\Data.p4k" "*.ini"
+```
+### Arguments
+
 **StarCitizen_XML_to_JSON.exe source [destination] [config...] [filter...]**
   - source: The path of the **Data** provided by **unp4k.**
   - destination: Where to store files (default: Working directory).
