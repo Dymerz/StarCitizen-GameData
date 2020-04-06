@@ -64,11 +64,9 @@ This tool is user by the StarCitizen-API to allow user to easily retrieve Star C
 
 - nuget (Powershell →`Install-Package NuGet.CommandLine`).
 - .Net Core 3.1+.
-- [unp4k](https://github.com/dolkensp/unp4k).
 
 ### Setting up
 
-- Install [unp4k](https://github.com/dolkensp/unp4k) and follow its instructions.
 - Clone this repo.
 - Install all dependencies using `nuget install`.
 
