@@ -20,7 +20,7 @@ jobs:
 
     - name: Install dependencies
       run: dotnet restore
-	  
+
     - name: Build XML To JSON
       run: dotnet build ".\StarCitizen_XML_to_JSON\StarCitizen_XML_To_JSON.csproj" --configuration Release --no-restore
 
