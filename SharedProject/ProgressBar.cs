@@ -21,6 +21,8 @@ namespace SharedProject
 		private bool auto_title = false;
 		private bool clear_line = false;
 
+		private bool consoleAvaliable = false;
+
 		/// <summary>
 		/// Create a loading bar at the bottom of the terminal
 		/// </summary>
@@ -29,6 +31,10 @@ namespace SharedProject
 		/// <param name="clear_line">if true, this will clear the line when the process is done.</param>
 		public ProgressBar(IList list, string title = "Progress", bool clear_line = false, bool auto_title = false)
 		{
+			consoleAvaliable = IsConsoleAvaliable();
+			if (!consoleAvaliable)
+				return;
+
 			this.list = list ?? throw new ArgumentNullException(nameof(ProgressBar.list));
 			this.length = list.Count;
 			this.width = Console.WindowWidth;
@@ -65,35 +71,43 @@ namespace SharedProject
 				yield return en.Current; // return the object to the foreach loop
 
 				// then clean the line with spaces
-				Console.Write('\r' + new String(' ', width - 1) + '\r');
+				if (consoleAvaliable)
+					Console.Write('\r' + new String(' ', width - 1) + '\r');
 
 				// increment the number of objects already processed
 				count++;
 
 				// Refresh the progress bar
-				Refresh();
+				if (consoleAvaliable)
+					Refresh();
 
 			}
 
-			if (clear_line)
+			if (consoleAvaliable)
 			{
-				int cursor_posLeft = Console.CursorLeft;
-				int cursor_posTop = Console.CursorTop;
+				if (clear_line)
+				{
+					int cursor_posLeft = Console.CursorLeft;
+					int cursor_posTop = Console.CursorTop;
 
-				Console.CursorTop = Console.WindowTop + Console.WindowHeight - 1;
-				Console.Write('\r' + new String(' ', width - 1) + '\r');
+					Console.CursorTop = Console.WindowTop + Console.WindowHeight - 1;
+					Console.Write('\r' + new String(' ', width - 1) + '\r');
 
-				Console.SetCursorPosition(cursor_posLeft, cursor_posTop);
+					Console.SetCursorPosition(cursor_posLeft, cursor_posTop);
+				}
+				else
+					Console.Write("\r\n");
 			}
-			else
-				Console.Write("\r\n");
-		}
+		}//une impasse
 
 		/// <summary>
 		/// Refresh the progress
 		/// </summary>
 		private void Refresh()
 		{
+			if (!consoleAvaliable)
+				return;
+
 			int cursor_posLeft = Console.CursorLeft; // get the cursor position (left)
 			int cursor_posTop = Console.CursorTop; // get the cursor position (right)
 
@@ -125,6 +139,16 @@ namespace SharedProject
 
 			// place the cursor back to his original position
 			Console.SetCursorPosition(cursor_posLeft, cursor_posTop);
+		}
+
+		/// <summary>
+		/// Check if console is avaliable
+		/// </summary>
+		/// <returns></returns>
+		private bool IsConsoleAvaliable()
+		{
+			int j = Console.Read();
+			return j != -1;
 		}
 	}
 }
