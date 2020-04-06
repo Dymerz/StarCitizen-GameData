@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace StarCitizen_XML_to_JSON
 {
-    class Program
+	public class Program
 	{
 		public static string VERSION = "0.5";
 
@@ -18,7 +18,7 @@ namespace StarCitizen_XML_to_JSON
 
 		private static bool useCache = false;
 
-		static void Main(string[] args)
+		public static void Main(string[] args)
 		{
 			Console.OutputEncoding = System.Text.Encoding.UTF8;
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
@@ -30,7 +30,7 @@ namespace StarCitizen_XML_to_JSON
 				PrintVersion();
 				return;
 			}else
-			if (args.Length < 1 || args.Contains("-h") || args.Contains("--help"))
+			if (args.Length < 2 || args.Contains("-h") || args.Contains("--help"))
 			{
 				PrintHelp();
 				return;

@@ -6,7 +6,7 @@ using StarCitizen_JSON_to_SQL.Cry;
 
 namespace StarCitizen_JSON_to_SQL
 {
-	class Program
+	public class Program
 	{
 		public static string VERSION = "0.5";
 
@@ -16,7 +16,7 @@ namespace StarCitizen_JSON_to_SQL
 		public static DateTime starttime = DateTime.Now;
 		public static string assembly_directory = AppContext.BaseDirectory;
 
-		static void Main(string[] args)
+		public static void Main(string[] args)
 		{
 			Console.OutputEncoding = System.Text.Encoding.UTF8;
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();

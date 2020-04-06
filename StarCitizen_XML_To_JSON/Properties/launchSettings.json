@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "StarCitizen_XML_To_JSON": {
+      "commandName": "Project",
+      "commandLineArgs": "\"P:\\Star Citizen Dev\\[3.8.1]\\Data\" \"P:\\Star Citizen Dev\\[3.8.1]\\Data.json\" --all"
+    }
+  }
+}
