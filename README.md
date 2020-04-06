@@ -6,7 +6,7 @@ You can also directly download binaries [here](https://github.com/Dymerz/StarCit
 
 This tool is user by the StarCitizen-API to allow user to easily retrieve Star Citizen data, if you want to contribute, follow the [contributing](CONTRIBUTING.md) guideline.
 
-![Discord](https://img.shields.io/badge/discord-join-%237289DA?link=https://discord.gg/EcWagya)
+[<img src="https://img.shields.io/badge/discord-join-%237289DA">](https://discord.gg/EcWagya)
 
 ## Supported versions
 
