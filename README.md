@@ -2,7 +2,7 @@
 
 This tool allow users to convert raw XML from the [unp4k](https://github.com/dolkensp/unp4k) tool in JSON format or SQL format.
 
-You can also directly download binaries [here](https://github.com/Dymerz/StarCitizen-GameData/releases).
+You can also directly download binaries [here](https://github.com/Dymerz/StarCitizen-GameData/releases/tag/dev).
 
 This tool is user by the StarCitizen-API to allow user to easily retrieve Star Citizen data, if you want to contribute, follow the [contributing](contributing.md) guideline.
 
