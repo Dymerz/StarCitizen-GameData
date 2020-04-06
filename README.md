@@ -16,10 +16,12 @@ This tool is user by the StarCitizen-API to allow user to easily retrieve Star C
 ## Usage
 
 ### Extract **Data.p4k**
-```bat
+```
 	unp4k.exe "C:\Program Files\Roberts Space Industries\StarCitizen\LIVE\Data.p4k" "*.xml"
 	unp4k.exe "C:\Program Files\Roberts Space Industries\StarCitizen\LIVE\Data.p4k" "*.json"
 	unp4k.exe "C:\Program Files\Roberts Space Industries\StarCitizen\LIVE\Data.p4k" "*.ini"
+	
+	unforge.exe ./Data/
 ```
 ### Arguments
 
