@@ -12,4 +12,4 @@ IF %ERRORLEVEL% EQU 0 (
 )
 
 echo Done
-SLEEP 5
+TIMEOUT 5
