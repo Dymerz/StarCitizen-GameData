@@ -19,12 +19,16 @@ jobs:
         dotnet-version: 3.1.101
 
     - name: Install dependencies
-      run: dotnet restore './StarCitizen_XML_To_JSON\StarCitizen_XML_To_JSON.csproj'
+      run: dotnet restore
+	  
+    - name: Build XML To JSON
+      run: dotnet build ".\StarCitizen_XML_to_JSON\StarCitizen_XML_To_JSON.csproj" --configuration Release --no-restore
 
-    - name: Build XML to JSON
-      run: dotnet build "./StarCitizen_XML_to_JSON/StarCitizen_XML_To_JSON.csproj" --configuration Release --no-restore
-    - name: Build JSON to SQL
-      run: dotnet build "./StarCitizen_JSON_to_SQL/StarCitizen_JSON_To_SQL.csproj" --configuration Release --no-restore
+    - name: Build JSON To SQL
+      run: dotnet build ".\StarCitizen_JSON_to_SQL\StarCitizen_JSON_To_SQL.csproj" --configuration Release --no-restore
 
     #- name: Testing XML to JSON
-    #  run: dotnet test "./StarCitizen XML to JSON/StarCitizen XML to JSON.csproj" --no-restore --verbosity normal
+    #  run: dotnet test ".\StarCitizen XML to JSON\StarCitizen XML to JSON.csproj" --no-restore --verbosity normal
+
+    #- name: Testing XML to JSON
+    #  run: dotnet test ".\StarCitizen_JSON_To_SQ\StarCitizen_JSON_To_SQ.csproj" --no-restore --verbosity normal
