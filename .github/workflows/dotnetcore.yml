@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -19,14 +19,12 @@ jobs:
         dotnet-version: 3.1.101
 
     - name: Install dependencies
-      run: apt -q update > /dev/null 2>&1 && apt -qq install -y icu-devtools > /dev/null 2>&1 && dotnet restore '.\StarCitizen XML to JSON\StarCitizen XML to JSON.csproj'
-      env:
-        LD_LIBRARY_PATH: /usr/local/lib 
+      run: dotnet restore '.\StarCitizen XML to JSON\StarCitizen XML to JSON.csproj'
 
     - name: Build XML to JSON
       run: dotnet build "./StarCitizen XML to JSON/StarCitizen XML to JSON.csproj" --configuration Release --no-restore
     - name: Build JSON to SQL
       run: dotnet build "./StarCitizen JSON to SQL/StarCitizen JSON to SQL.csproj" --configuration Release --no-restore
 
-    - name: Testing XML to JSON
-      run: dotnet test "./StarCitizen XML to JSON/StarCitizen XML to JSON.csproj" --no-restore --verbosity normal
+    #- name: Testing XML to JSON
+    #  run: dotnet test "./StarCitizen XML to JSON/StarCitizen XML to JSON.csproj" --no-restore --verbosity normal
