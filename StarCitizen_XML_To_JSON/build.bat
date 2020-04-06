@@ -7,6 +7,9 @@ WHERE wsl
 IF %ERRORLEVEL% EQU 0 (
 	echo Building Linux x64
 	wsl dotnet publish "StarCitizen_XML_To_JSON.csproj" -c Release -r linux-x64 --self-contained=true 
-)else(
+) else (
 	ECHO Skipping Linux build, missing WSL
 )
+
+echo Done
+SLEEP 5
