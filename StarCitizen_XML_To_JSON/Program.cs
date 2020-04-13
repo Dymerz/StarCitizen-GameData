@@ -268,6 +268,7 @@ namespace StarCitizen_XML_to_JSON
 					case "--german":
 						break;
 
+					case "-a":
 					case "--all":
 						parameters = SCType.Every;
 						break;
