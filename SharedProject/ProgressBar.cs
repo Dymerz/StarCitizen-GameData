@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace SharedProject
@@ -134,6 +133,9 @@ namespace SharedProject
 			// print all progress info (e.g: "Progress: [ 50%] ")
 			Console.Write(String.Format("{0," + title_max + "}: [{1,3:##0}%] ", title, percent));
 
+			// flush Buffer
+			Console.Write("");
+
 			// print the loading progress (e.g: ##....)
 			Console.Write($"[{progress}{remaining}]");
 
@@ -147,8 +149,8 @@ namespace SharedProject
 		/// <returns></returns>
 		private bool IsConsoleAvaliable()
 		{
-			int j = Console.Read();
-			return j != -1;
+			bool is_console_app = Console.OpenStandardInput(1) != System.IO.Stream.Null;
+			return is_console_app;
 		}
 	}
 }
