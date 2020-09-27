@@ -38,8 +38,10 @@ namespace StarCitizen_JSON_to_SQL.Cry
 			{
 				content = Regex.Replace(content, "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", "$1");
 				content = Regex.Replace(content, "\\\\", "\\\\");
+				content = Regex.Replace(content, @"\\\\\\\\", "/");
 				content = Regex.Replace(content, @"\\\\'", "\\\'");
 				content = Regex.Replace(content, "\t", "\\\\t");
+				content = Regex.Replace(content, "\n", "\\\\n");
 			}
 
 			string name = f.Name.Replace(".json", "").Replace("_", " ");
