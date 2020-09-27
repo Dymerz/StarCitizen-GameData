@@ -10,8 +10,7 @@ This tool is user by the StarCitizen-API to allow user to easily retrieve Star C
 
 ## Supported versions
 
-- 3.6.1 → 3.8.1
-- 3.8.2 [not fully tested]
+- 3.6.1 → 3.10.2
 
 ## Usage
 
